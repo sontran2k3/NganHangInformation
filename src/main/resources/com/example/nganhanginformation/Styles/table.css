@@ -1,0 +1,41 @@
+
+.table-view {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: linear-gradient(to right, #1a4d3f, #3b8677);
+}
+
+.table-view .column-header, .table-view .filler {
+    -fx-background-color: transparent;
+}
+
+
+.table-view .table-cell {
+    -fx-alignment: center;
+    -fx-padding: 8px;
+    -fx-border-color: transparent;
+    -fx-font-family: "Arial";
+    -fx-font-size: 14px;
+    -fx-text-fill: #333333;
+}
+
+.table-view .column-header .label {
+    -fx-font-size: 15px;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.text-field {
+    -fx-background-color: #e7f3ec;
+    -fx-border-color: #3b8677;
+    -fx-border-radius: 5;
+    -fx-padding: 5px;
+    -fx-background-radius: 5;
+}
+.text-field:focused {
+    -fx-border-color: #1a4d3f;
+}
+

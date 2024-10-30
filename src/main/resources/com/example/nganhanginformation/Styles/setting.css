@@ -1,0 +1,22 @@
+
+.outer-frame {
+    -fx-background-color: #f0f0f0;
+}
+
+.styled-button {
+    -fx-background-color: #4caf50;
+    -fx-text-fill: white;
+}
+
+.dark-mode .outer-frame {
+    -fx-background-color: #2e2e2e;
+}
+
+.dark-mode .styled-button {
+    -fx-background-color: #4caf50;
+    -fx-text-fill: white;
+}
+
+.dark-mode {
+    -fx-text-fill: white;
+}
