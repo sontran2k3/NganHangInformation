@@ -9,8 +9,9 @@ public class SettingsPane extends AnchorPane {
     private boolean isDarkMode = false;
 
     public SettingsPane() {
-        Label welcomeLabel = new Label("WELCOME, Trần K. Sơn. Setting");
+        Label welcomeLabel = new Label("WELCOME, Trần K. Sơn. Dang Tesst");
         welcomeLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
+
 
         ToggleButton toggleButton = new ToggleButton("Chế độ tối");
         toggleButton.setOnAction(e -> toggleDarkMode());
