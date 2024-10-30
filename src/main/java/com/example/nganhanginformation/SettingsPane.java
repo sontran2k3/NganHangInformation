@@ -6,7 +6,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 
 public class SettingsPane extends AnchorPane {
-    private boolean isDarkMode = false; // Biến lưu trạng thái chế độ
+    private boolean isDarkMode = false;
 
     public SettingsPane() {
         Label welcomeLabel = new Label("WELCOME, Trần K. Sơn. Setting");
