@@ -34,7 +34,7 @@ public class PaymentOrderForm extends Application {
 
         VBox mainContainer = new VBox(20);
         mainContainer.setPadding(new Insets(20));
-        mainContainer.setStyle("-fx-background-color: #f3f4f6;"); // Neutral background color
+        mainContainer.setStyle("-fx-background-color: #f3f4f6;");
 
         HBox header = new HBox();
         header.setPadding(new Insets(10));
