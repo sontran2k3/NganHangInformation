@@ -32,12 +32,10 @@ public class PaymentOrderForm extends Application {
         primaryStage.setTitle("Payment Order Form");
         primaryStage.setResizable(false);
 
-        // Main container
         VBox mainContainer = new VBox(20);
         mainContainer.setPadding(new Insets(20));
         mainContainer.setStyle("-fx-background-color: #f3f4f6;"); // Neutral background color
 
-        // Header with gradient background
         HBox header = new HBox();
         header.setPadding(new Insets(10));
         header.setStyle("-fx-background-color: linear-gradient(to right, #4A90E2, #50C9C3);");
@@ -46,7 +44,6 @@ public class PaymentOrderForm extends Application {
         titleLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: white;");
         header.getChildren().add(titleLabel);
 
-        // Group 1: Account Information (Editable TextFields)
         TitledPane accountInfoGroup = createGroupPane("Thông tin tài khoản (Account Information)", new String[][]{
                 {"Tên TK người gửi (A/C Name):", senderName},
                 {"Số TK người gửi (A/C No.):", senderAccount},
@@ -54,19 +51,16 @@ public class PaymentOrderForm extends Application {
                 {"Số TK người nhận:", receiverAccount}
         });
 
-        // Group 2: Bank Information (Editable TextFields)
         TitledPane bankInfoGroup = createGroupPane("Thông tin ngân hàng (Bank Information)", new String[][]{
                 {"Tại NH/At Bank:", "BANK OF INFORMATION"},
                 {"Chi nhánh/Branch:", "HA NOI"}
         });
 
-        // Group 3: Amount Information (Editable TextFields)
         TitledPane amountInfoGroup = createGroupPane("Thông tin số tiền (Amount Information)", new String[][]{
                 {"Số tiền bằng số (Amount in figures):", String.format("%.2f", amount)},
                 {"Số tiền bằng chữ (Amount in words):", amountInWords}
         });
 
-        // Footer with signatures
         HBox footer = new HBox(100);
         footer.setPadding(new Insets(20, 0, 0, 0));
         footer.setStyle("-fx-alignment: center;");
@@ -81,7 +75,7 @@ public class PaymentOrderForm extends Application {
         );
 
         VBox bankSignature = new VBox(5);
-        bankSignature.setAlignment(Pos.CENTER); // Center-align the elements in VBox
+        bankSignature.setAlignment(Pos.CENTER);
         bankSignature.getChildren().addAll(
                 createStyledLabel("NGÂN HÀNG (BANK SENDER)"),
                 createStyledLabel("Giao dịch viên (Received by)"),
@@ -91,7 +85,6 @@ public class PaymentOrderForm extends Application {
 
         footer.getChildren().addAll(customerSignature, bankSignature);
 
-        // Adding everything to the main container
         mainContainer.getChildren().addAll(
                 header,
                 accountInfoGroup,
@@ -100,15 +93,12 @@ public class PaymentOrderForm extends Application {
                 footer
         );
 
-        // Set up the scene and stage
         Scene scene = new Scene(mainContainer, 800, 750);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
 
-    /**
-     * Helper method to create a TitledPane group with specified fields (with editable TextFields).
-     */
+
     private TitledPane createGroupPane(String title, String[][] fields) {
         GridPane pane = new GridPane();
         pane.setHgap(10);
@@ -127,9 +117,6 @@ public class PaymentOrderForm extends Application {
         return titledPane;
     }
 
-    /**
-     * Helper method to create a label with consistent styling.
-     */
     private Label createStyledLabel(String text) {
         Label label = new Label(text);
         label.setStyle("-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #333;");
