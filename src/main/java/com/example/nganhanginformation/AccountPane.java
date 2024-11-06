@@ -2,7 +2,6 @@ package com.example.nganhanginformation;
 
 import BusinessLogicLayer.BLLAccount;
 import Entity.EntityAccount;
-import BusinessLogicLayer.BLLKhachHang;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;

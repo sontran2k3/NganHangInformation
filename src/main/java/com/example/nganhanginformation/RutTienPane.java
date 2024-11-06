@@ -61,7 +61,6 @@ public class RutTienPane extends AnchorPane {
     }
 
     private void setupTableColumns() {
-        // Thiết lập các cột cho bảng
         TableColumn<EntityAccount, Integer> idCol = new TableColumn<>("Mã tài khoản");
         idCol.setCellValueFactory(new PropertyValueFactory<>("customerId"));
         idCol.setMinWidth(100);
@@ -154,7 +153,7 @@ public class RutTienPane extends AnchorPane {
 
         Image printIcon = new Image(getClass().getResourceAsStream("/com/example/nganhanginformation/Image/printer.png")); // Đường dẫn đến icon
         ImageView printIconView = new ImageView(printIcon);
-        printIconView.setFitWidth(20);  // Đặt kích thước cho icon
+        printIconView.setFitWidth(20);
         printIconView.setFitHeight(20);
 
 
