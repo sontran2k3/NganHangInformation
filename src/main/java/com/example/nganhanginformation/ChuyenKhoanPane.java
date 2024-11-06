@@ -115,6 +115,7 @@ public class ChuyenKhoanPane extends AnchorPane {
 
         Label dateLabel = new Label("Thời gian giao dịch:");
         DatePicker dateField = new DatePicker();
+        dateField.setDisable(true);
 
         Label pinLabel = new Label("Mã PIN/Mật khẩu:");
         pinField = new PasswordField();
@@ -223,24 +224,20 @@ public class ChuyenKhoanPane extends AnchorPane {
     }
 
     private void printReceipt(String senderAccount, String receiverAccount, double amount, String description, String referenceCode) {
-        String receiptContent = "----- HÓA ĐƠN GIAO DỊCH -----\n"
-                + "Ngân hàng: Ngân hàng XYZ\n"
-                + "Mã tham chiếu: " + referenceCode + "\n"
-                + "Ngày giao dịch: " + java.time.LocalDate.now() + "\n\n"
-                + "Người gửi: " + senderAccount + "\n"
-                + "Người nhận: " + receiverAccount + "\n"
-                + "Số tiền: " + amount + "\n"
-                + "Nội dung: " + description + "\n\n"
-                + "----- CẢM ƠN QUÝ KHÁCH -----";
-
-        TextArea receiptArea = new TextArea(receiptContent);
-        receiptArea.setEditable(false);
-
+        String amountInWords = convertAmountToWords(amount);  // You can implement this conversion method.
+        PaymentOrderForm paymentOrderForm = new PaymentOrderForm(
+                senderAccount,
+                dalAccount.getCustomerNameByAccount(senderAccount),
+                receiverAccount,
+                dalAccount.getCustomerNameByAccount(receiverAccount),
+                amount,
+                amountInWords
+        );
         Stage printStage = new Stage();
-        printStage.setTitle("Hóa đơn giao dịch");
-        printStage.setScene(new Scene(new VBox(receiptArea), 400, 300));
-        printStage.show();
+        paymentOrderForm.start(printStage);
     }
+
+
 
     private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -262,4 +259,71 @@ public class ChuyenKhoanPane extends AnchorPane {
             tableView.setItems(filteredList);
         }
     }
+    private String convertAmountToWords(double amount) {
+        // Kiểm tra nếu số là 0
+        if (amount == 0) {
+            return "Không đồng";
+        }
+
+        // Biến lưu trữ phần nguyên và phần thập phân
+        long integerPart = (long) amount;
+        int decimalPart = (int) Math.round((amount - integerPart) * 100);
+
+        // Danh sách các đơn vị tiền tệ và số đếm
+        String[] ones = {"", "Một", "Hai", "Ba", "Bốn", "Năm", "Sáu", "Bảy", "Tám", "Chín"};
+        String[] tens = {"", "Mười", "Hai mươi", "Ba mươi", "Bốn mươi", "Năm mươi", "Sáu mươi", "Bảy mươi", "Tám mươi", "Chín mươi"};
+        String[] powers = {"", "nghìn", "triệu", "tỷ", "nghìn tỷ", "triệu tỷ"};
+
+        // Chuyển phần nguyên thành chữ
+        String integerWords = convertIntegerToWords(integerPart, ones, tens, powers);
+
+        // Chuyển phần thập phân thành chữ
+        String decimalWords = decimalPart > 0 ? "với " + convertIntegerToWords(decimalPart, ones, tens, new String[]{}) + " xu" : "";
+
+        // Kết hợp phần nguyên và phần thập phân
+        return integerWords + " đồng " + decimalWords;
+    }
+
+    private String convertIntegerToWords(long number, String[] ones, String[] tens, String[] powers) {
+        if (number == 0) {
+            return "Không";
+        }
+
+        StringBuilder words = new StringBuilder();
+        int powerIndex = 0;
+
+        // Chuyển đổi từng phần ba chữ số một
+        while (number > 0) {
+            int part = (int) (number % 1000);
+            if (part > 0) {
+                words.insert(0, convertThreeDigitPartToWords(part, ones, tens) + " " + powers[powerIndex] + " ");
+            }
+            number /= 1000;
+            powerIndex++;
+        }
+
+        return words.toString().trim();
+    }
+
+    private String convertThreeDigitPartToWords(int number, String[] ones, String[] tens) {
+        StringBuilder partWords = new StringBuilder();
+
+        int hundred = number / 100;
+        int remainder = number % 100;
+
+        if (hundred > 0) {
+            partWords.append(ones[hundred]).append(" trăm ");
+        }
+
+        if (remainder > 0) {
+            if (remainder < 20) {
+                partWords.append(remainder <= 10 ? "mười " : ones[remainder / 10] + " mươi " + (remainder % 10 == 0 ? "" : ones[remainder % 10]));
+            } else {
+                partWords.append(tens[remainder / 10]).append(" ").append(ones[remainder % 10]);
+            }
+        }
+
+        return partWords.toString().trim();
+    }
+
 }
