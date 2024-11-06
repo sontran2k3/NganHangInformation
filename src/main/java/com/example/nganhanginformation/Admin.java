@@ -79,10 +79,10 @@ public class Admin extends Application {
         AnchorPane.setTopAnchor(mainContent, 20.0);
         AnchorPane.setLeftAnchor(mainContent, 250.0);
 
-        HomePane homePane = new HomePane();
-        InfoPane infoPane = new InfoPane(scene);
+        KhachHangPane homePane = new KhachHangPane(scene);
+        AccountPane infoPane = new AccountPane(scene);
         ManagePane managePane = new ManagePane();
-        SettingsPane settingsPane = new SettingsPane();
+        ThongKePane settingsPane = new ThongKePane();
 
         mainContent.getChildren().addAll(homePane, infoPane, managePane, settingsPane);
 

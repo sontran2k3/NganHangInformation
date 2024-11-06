@@ -1,0 +1,38 @@
+.welcome-label {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-alignment: left;
+}
+.info-label {
+    -fx-font-family: "Arial";
+    -fx-font-weight: bold;
+    -fx-font-size: 30px;
+    -fx-text-fill: white;
+}
+
+.info-text {
+    -fx-font-family: "Arial";
+    -fx-font-weight: normal;
+    -fx-font-size: 14px;
+    -fx-text-fill: white;
+}
+
+.info-box {
+    -fx-background-color: #4a90e2; /* Màu mặc định, có thể thay đổi */
+    -fx-background-radius: 8;
+    -fx-padding: 10px;
+    -fx-alignment: center;
+    -fx-pref-width: 250px;
+    -fx-pref-height: 80px;
+}
+
+.chart {
+    -fx-pref-width: 520px;
+    -fx-pref-height: 250px;
+}
+
+.chart-grid {
+    -fx-padding: 10px;
+    -fx-hgap: 30px;
+    -fx-vgap: 30px;
+}

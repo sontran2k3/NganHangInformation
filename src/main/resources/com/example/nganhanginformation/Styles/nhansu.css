@@ -23,7 +23,7 @@
     -fx-background-color: #2c3e50;
     -fx-text-fill: #ecf0f1;
     -fx-font-size: 16px;
-    -fx-pref-width: 180px;
+    -fx-pref-width: 250px;
     -fx-pref-height: 40px;
     -fx-cursor: hand;
     -fx-border-radius: 5;
@@ -37,6 +37,55 @@
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 6, 0.0, 0, 1);
 }
 
+
 .styled-button:focused {
+    -fx-background-color: #16a085;
+}
+
+#titled-pane {
+    -fx-background-color: #2c3e50;
+    -fx-border-color: #ffffff;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-padding: 8 16;
+}
+
+#titled-pane > .title {
+    -fx-background-color: #2c3e50;
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 16px;
+    -fx-padding: 5 10;
+    -fx-border-radius: 5;
+    -fx-border-color: #ffffff;
+    -fx-background-radius: 5;
+}
+
+#titled-pane .arrow {
+    -fx-background-color: #ffffff;
+}
+
+#titled-pane .content {
+    -fx-background-color: #2c3e50;
+    -fx-padding: 10;
+}
+
+#titled-pane .button {
+    -fx-background-color: #ffffff;
+    -fx-text-fill: #2c3e50;
+    -fx-border-color: #2c3e50;
+    -fx-border-width: 1px;
+    -fx-font-size: 16px;
+    -fx-pref-width: 200px;
+    -fx-pref-height: 40px;
+    -fx-cursor: hand;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+}
+
+#titled-pane .button:hover {
+    -fx-background-color: #1abc9c;
+}
+.titled-pane:focused {
     -fx-background-color: #16a085;
 }

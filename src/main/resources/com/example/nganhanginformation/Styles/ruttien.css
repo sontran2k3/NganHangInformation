@@ -1,0 +1,31 @@
+.text-field {
+    -fx-font-family: "Arial";
+    -fx-font-size: 14px;
+}
+
+
+.text {
+    -fx-font-family: "Arial";
+    -fx-font-size: 14px;
+}
+
+.table-container {
+    -fx-background-color: white;
+    -fx-border-color: lightgray;
+    -fx-border-radius: 10;
+    -fx-padding: 10;
+    -fx-background-radius: 10;
+}
+
+.grid-pane {
+    -fx-background-color: #f9f9f9;
+    -fx-border-color: #dcdcdc;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+}
+
+.transfer-button {
+    -fx-background-color: #4CAF50;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}

@@ -96,7 +96,7 @@ public class Login extends Application {
 
             if (role != null) {
                 try {
-                    if (role.equals("nhanvien")) {
+                    if (role.equals("nhansu")) {
                         NhanSu nhanSuScreen = new NhanSu();
                         Stage newStage = new Stage();
                         nhanSuScreen.start(newStage);
