@@ -10,13 +10,16 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
 
+
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
+import java.sql.Date;
 
 public class KhachHangPane extends AnchorPane {
 
@@ -42,12 +45,15 @@ public class KhachHangPane extends AnchorPane {
         container.setSpacing(10);
         container.setPadding(new Insets(10));
 
+        VBox inputFieldsBox = new VBox();
+        inputFieldsBox.setPadding(new Insets(15));
+        inputFieldsBox.setStyle("-fx-border-color: #3b8677; -fx-border-width: 2; -fx-border-radius: 10; -fx-background-radius: 10; -fx-background-color: #f5f5f5;");
+
         GridPane grid = new GridPane();
-        grid.setVgap(10);  // Giảm khoảng cách giữa các hàng
-        grid.setHgap(20); // Giảm khoảng cách giữa các cột
+        grid.setVgap(10);
+        grid.setHgap(20);
         grid.setPadding(new Insets(10));
 
-        // Cột 1: Thông tin cá nhân
         TextField fullNameField = new TextField();
         TextField cccdField = new TextField();
         DatePicker birthdayPicker = new DatePicker();
@@ -62,12 +68,9 @@ public class KhachHangPane extends AnchorPane {
         grid.add(new Label("Address:"), 0, 3);
         grid.add(addressField, 1, 3);
 
-        // Cột 2: Thông tin bổ sung
         TextField phoneField = new TextField();
         TextField emailField = new TextField();
         TextField occupationField = new TextField();
-        ComboBox<String> genderBox = new ComboBox<>();
-        genderBox.getItems().addAll("Male", "Female", "Other");
 
         grid.add(new Label("Phone:"), 2, 0);
         grid.add(phoneField, 3, 0);
@@ -75,10 +78,22 @@ public class KhachHangPane extends AnchorPane {
         grid.add(emailField, 3, 1);
         grid.add(new Label("Occupation:"), 2, 2);
         grid.add(occupationField, 3, 2);
+
+        ToggleGroup genderGroup = new ToggleGroup();
+        RadioButton maleRadio = new RadioButton("Nam");
+        RadioButton femaleRadio = new RadioButton("Nữ");
+
+        maleRadio.setToggleGroup(genderGroup);
+        femaleRadio.setToggleGroup(genderGroup);
+
+        HBox genderBox = new HBox(50);
+        genderBox.getChildren().addAll(maleRadio, femaleRadio);
+
+        maleRadio.setSelected(true);
+
         grid.add(new Label("Gender:"), 2, 3);
         grid.add(genderBox, 3, 3);
 
-        // Cột 3: Hình ảnh và chữ ký
         Button chooseProfileImageButton = new Button("Ảnh đại diện");
         chooseProfileImageButton.setOnAction(e -> chooseImage("Profile Picture"));
         profileImageView = new ImageView();
@@ -97,7 +112,7 @@ public class KhachHangPane extends AnchorPane {
         grid.add(chooseProfileImageButton, 4, 0);
         grid.add(profileImageContainer, 5, 0);
 
-        Button chooseSignImageButton = new Button("Chữ kỹ");
+        Button chooseSignImageButton = new Button("Chữ ký");
         chooseSignImageButton.setOnAction(e -> chooseImage("Signature"));
         signImageView = new ImageView();
         signImageView.setPreserveRatio(true);
@@ -115,7 +130,6 @@ public class KhachHangPane extends AnchorPane {
         grid.add(chooseSignImageButton, 4, 1);
         grid.add(signImageContainer, 5, 1);
 
-        // Bảng khách hàng
         tableView = new TableView<>();
         TableColumn<EntityKhachHang, Integer> idCol = new TableColumn<>("ID");
         idCol.setCellValueFactory(new PropertyValueFactory<>("customerId"));
@@ -162,7 +176,11 @@ public class KhachHangPane extends AnchorPane {
         searchField.setPromptText("Search...");
         searchField.textProperty().addListener((observable, oldValue, newValue) -> filterData(newValue));
 
-        container.getChildren().addAll(grid, searchField, tableView);
+        Button addCustomerButton = new Button("Thêm Khách Hàng");
+
+
+        inputFieldsBox.getChildren().add(grid); // Đưa grid vào VBox
+        container.getChildren().addAll(inputFieldsBox, searchField, addCustomerButton, tableView);
         this.getChildren().add(container);
         AnchorPane.setTopAnchor(container, 70.0);
         AnchorPane.setLeftAnchor(container, 20.0);
@@ -175,27 +193,31 @@ public class KhachHangPane extends AnchorPane {
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Image Files", "*.jpg", "*.jpeg", "*.png"));
 
-        File selectedFile = fileChooser.showOpenDialog(null);
+        File selectedFile = fileChooser.showOpenDialog(this.getScene().getWindow());
         if (selectedFile != null) {
-            String imagePath = selectedFile.toURI().toString();
+            Image image = new Image(selectedFile.toURI().toString());
             if (imageType.equals("Profile Picture")) {
-                profileImageView.setImage(new Image(imagePath));
+                profileImageView.setImage(image);
                 profileIcon.setVisible(false);
             } else if (imageType.equals("Signature")) {
-                signImageView.setImage(new Image(imagePath));
+                signImageView.setImage(image);
                 signIcon.setVisible(false);
             }
         }
     }
 
-    private void filterData(String query) {
+    private void filterData(String searchText) {
         ObservableList<EntityKhachHang> filteredList = FXCollections.observableArrayList();
-        for (EntityKhachHang customer : dataList) {
-            if (customer.getFullname().toLowerCase().contains(query.toLowerCase()) ||
-                    customer.getEmail().toLowerCase().contains(query.toLowerCase())) {
-                filteredList.add(customer);
+
+        for (EntityKhachHang kh : dataList) {
+            if (kh.getFullname().toLowerCase().contains(searchText.toLowerCase()) ||
+                    kh.getCccd().toLowerCase().contains(searchText.toLowerCase()) ||
+                    kh.getPhone().toLowerCase().contains(searchText.toLowerCase())) {
+                filteredList.add(kh);
             }
         }
+
         tableView.setItems(filteredList);
     }
+
 }

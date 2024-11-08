@@ -15,9 +15,31 @@ public class EntityKhachHang {
     private String email;
     private String occupation;
     private BigDecimal balance;
-    private String gender; // Chuyển từ int sang String
+    private String gender;
 
-    // Getters và Setters cho các thuộc tính
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+
+    private byte[] signSample;
+    private byte[] profilePicture;
+
+    public byte[] getProfilePicture() {
+        return profilePicture;
+    }
+    public void setProfilePicture(byte[] profilePicture) {
+        this.profilePicture = profilePicture;
+    }
+
+    public byte[] getSignSample() {
+        return signSample;
+    }
+    public void setSignSample(byte[] signSample) {
+        this.signSample = signSample;
+    }
+
     public int getCustomerId() { return customerId; }
     public void setCustomerId(int customerId) { this.customerId = customerId; }
 

@@ -11,4 +11,9 @@ public class BLLKhachHang {
     public List<EntityKhachHang> getAllCustomers() {
         return dalKhachHang.getAllCustomers();
     }
+    public EntityKhachHang getCustomerById(int customerId) {
+        return dalKhachHang.getCustomerById(customerId);
+    }
+
+
 }

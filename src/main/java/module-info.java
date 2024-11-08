@@ -3,6 +3,8 @@ module com.example.nganhanginformation {
     requires javafx.fxml;
     requires java.sql;
 
+    requires java.desktop;
+
     opens Entity to javafx.base;
 
 

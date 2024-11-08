@@ -38,5 +38,17 @@
 .text-field:focused {
     -fx-border-color: #1a4d3f;
 }
+.input-fields-box {
+    -fx-border-color: #3b8677;
+    -fx-border-width: 2;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-background-color: #f5f5f5;
+    -fx-padding: 15;
+}
+
+.table-view {
+    -fx-pref-height: 250px; /* Điều chỉnh chiều cao */
+}
 
 

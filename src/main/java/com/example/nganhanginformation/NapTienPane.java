@@ -90,8 +90,8 @@ public class NapTienPane extends AnchorPane {
 
         GridPane gridPane = new GridPane();
         gridPane.setPadding(new Insets(20));
-        gridPane.setVgap(10);
-        gridPane.setHgap(10);
+        gridPane.setVgap(5);
+        gridPane.setHgap(5);
         gridPane.getStyleClass().add("grid-pane"); // Thêm class
 
 

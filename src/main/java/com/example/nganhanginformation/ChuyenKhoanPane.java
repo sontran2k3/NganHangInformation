@@ -89,8 +89,8 @@ public class ChuyenKhoanPane extends AnchorPane {
     private GridPane createTransferSection() {
         GridPane gridPane = new GridPane();
         gridPane.setPadding(new Insets(20));
-        gridPane.setVgap(30);
-        gridPane.setHgap(30);
+        gridPane.setVgap(10);
+        gridPane.setHgap(10);
         gridPane.getStyleClass().add("grid-pane");
 
         Label senderAccountLabel = new Label("Số tài khoản người gửi:");
@@ -260,7 +260,6 @@ public class ChuyenKhoanPane extends AnchorPane {
         }
     }
     private String convertAmountToWords(double amount) {
-        // Kiểm tra nếu số là 0
         if (amount == 0) {
             return "Không đồng";
         }
