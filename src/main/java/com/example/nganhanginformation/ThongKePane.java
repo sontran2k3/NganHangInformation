@@ -1,6 +1,7 @@
 package com.example.nganhanginformation;
 
 import BusinessLogicLayer.BLLThongKe;
+import com.example.nganhanginformation.CalendarBoxApp;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.chart.*;
@@ -16,8 +17,9 @@ public class ThongKePane extends AnchorPane {
     public ThongKePane() {
         bllThongKe = new BLLThongKe();
 
-        Label welcomeLabel = new Label("WELCOME, Trần K. Sơn. Báo cáo thống kê");
-        welcomeLabel.getStyleClass().add("welcome-label");
+        Label welcomeLabel = new Label("WELCOME, Trần K. Sơn.  Báo cáo thống kê");
+        welcomeLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
+        this.getChildren().add(welcomeLabel);
         AnchorPane.setTopAnchor(welcomeLabel, 20.0);
         AnchorPane.setLeftAnchor(welcomeLabel, 20.0);
 
@@ -29,35 +31,49 @@ public class ThongKePane extends AnchorPane {
         String transactionCount = String.valueOf(getMonthlyStatistics("transaction"));
         String revenue = String.format("%.2f", getMonthlyStatistics("revenue"));
 
-        Label totalAccounts = createInfoLabel(accountCount, "Tài khoản/Tháng", Color.web("#4a90e2"));
-        Label totalTransactions = createInfoLabel(transactionCount, "Giao dịch/Tháng", Color.web("#50e3c2"));
-        Label totalRevenue = createInfoLabel(revenue, "Doanh Thu/Tháng", Color.web("#f5a623"));
+        Label totalAccounts = createInfoLabel(accountCount, "Số đơn bán ra trong ngày", Color.web("#4a90e2"));
+        Label totalTransactions = createInfoLabel(transactionCount, "Số sản phẩm bán trong ngày", Color.web("#50e3c2"));
+        Label totalRevenue = createInfoLabel(revenue + " VND", "Doanh thu ngày", Color.web("#b0b0b0"));
 
-        topPanel.getChildren().addAll(totalAccounts, totalTransactions, totalRevenue);
+        topPanel.getChildren().addAll(totalAccounts, totalRevenue, totalTransactions);
 
-        BarChart<String, Number> totalEnrolledChart = createBarChart("Doanh thu trong năm");
-        LineChart<String, Number> femaleEnrolledChart = createLineChart("Enrolled Female Chart", Color.DEEPPINK);
-        LineChart<String, Number> maleEnrolledChart = createLineChart("Enrolled Male Chart", Color.DODGERBLUE);
+        BarChart<String, Number> revenueChart = createBarChart("Doanh thu theo tháng");
 
-        totalEnrolledChart.getStyleClass().add("chart");
-        femaleEnrolledChart.getStyleClass().add("chart");
-        maleEnrolledChart.getStyleClass().add("chart");
+        Region separator = new Region();
+        separator.setStyle("-fx-background-color: #ccc; -fx-min-height: 1px; -fx-pref-height: 1px;");
 
-        GridPane chartGrid = new GridPane();
-        chartGrid.getStyleClass().add("chart-grid");
-        chartGrid.add(totalEnrolledChart, 0, 0, 1, 2);
-        chartGrid.add(femaleEnrolledChart, 1, 0);
-        chartGrid.add(maleEnrolledChart, 1, 1);
-        BarChart<String, Number> revenueChart = createBarChart("");
-        chartGrid.add(revenueChart, 0, 0, 1, 2);
+        VBox dataContainer = new VBox(20, topPanel, separator, revenueChart);
+        dataContainer.setPadding(new Insets(20));
+        dataContainer.setStyle("-fx-background-color: white; -fx-border-color: lightgray; -fx-border-width: 2px; -fx-border-radius: 15px;");
+
+        AnchorPane.setTopAnchor(dataContainer, 80.0);
+
+        VBox mainLayout = new VBox(20, welcomeLabel, dataContainer);
+
+        CalendarBoxApp calendarBoxApp = new CalendarBoxApp();
+        VBox calendarBox = calendarBoxApp.createCalendarBox();
 
 
-        VBox mainLayout = new VBox(20, welcomeLabel, topPanel, chartGrid);
-        mainLayout.setPadding(new Insets(20));
-        mainLayout.setAlignment(Pos.TOP_LEFT);
+        calendarBox.setMaxHeight(350);
 
-        this.getChildren().add(mainLayout);
+        calendarBox.getStyleClass().add("calendar-box-container");
 
+        dataContainer.heightProperty().addListener((observable, oldValue, newValue) -> {
+            double dataContainerHeight = dataContainer.getHeight();
+            calendarBox.setPrefHeight(dataContainerHeight);
+        });
+
+        HBox layoutWithCalendar = new HBox(20, mainLayout, calendarBox);
+        layoutWithCalendar.setPadding(new Insets(20));
+        layoutWithCalendar.setAlignment(Pos.TOP_LEFT);
+
+        VBox calendarBoxContainer = new VBox();
+        calendarBoxContainer.getChildren().add(calendarBox);
+        calendarBoxContainer.setPadding(new Insets(35, 0, 0, 0));
+
+        layoutWithCalendar.getChildren().add(calendarBoxContainer);
+
+        this.getChildren().addAll(layoutWithCalendar);
         this.getStylesheets().add(getClass().getResource("Styles/thongke.css").toExternalForm());
     }
 
@@ -81,12 +97,19 @@ public class ThongKePane extends AnchorPane {
         Label numberLabel = new Label(number);
         numberLabel.getStyleClass().add("info-label");
 
+        numberLabel.setStyle("-fx-font-size: 20px;");
+
         Label textLabel = new Label(text);
         textLabel.getStyleClass().add("info-text");
 
-        VBox box = new VBox(5, numberLabel, textLabel);
-        box.setStyle("-fx-background-color: " + toHex(backgroundColor) + "; -fx-padding: 10; -fx-border-radius: 5; -fx-background-radius: 5;");
+        textLabel.setStyle("-fx-font-size: 16px;");
+
+        VBox box = new VBox(10, numberLabel, textLabel);
+        box.setStyle("-fx-background-color: " + toHex(backgroundColor) + "; -fx-padding: 20; -fx-border-radius: 10; -fx-background-radius: 10;");
         box.getStyleClass().add("info-box");
+
+        box.setPrefWidth(250);
+        box.setPrefHeight(75);
 
         return new Label("", box);
     }
@@ -96,8 +119,8 @@ public class ThongKePane extends AnchorPane {
         NumberAxis yAxis = new NumberAxis();
         BarChart<String, Number> barChart = new BarChart<>(xAxis, yAxis);
         barChart.setTitle(title);
-        xAxis.setLabel("Năm");
-        yAxis.setLabel("Doanh thu ");
+        xAxis.setLabel("Tháng");
+        yAxis.setLabel("Doanh thu (VND)");
 
         XYChart.Series<String, Number> dataSeries = new XYChart.Series<>();
         dataSeries.setName("Doanh thu");
@@ -115,33 +138,10 @@ public class ThongKePane extends AnchorPane {
         barChart.setLegendVisible(true);
         barChart.setCategoryGap(10);
 
+        barChart.setPrefWidth(800);
+        barChart.setPrefHeight(400);
+
         return barChart;
-    }
-
-    private LineChart<String, Number> createLineChart(String title, Color lineColor) {
-        CategoryAxis xAxis = new CategoryAxis();
-        NumberAxis yAxis = new NumberAxis();
-        LineChart<String, Number> lineChart = new LineChart<>(xAxis, yAxis);
-        lineChart.setTitle(title);
-        xAxis.setLabel("Date");
-        yAxis.setLabel("Doanh thu trong năm");
-
-        XYChart.Series<String, Number> dataSeries = new XYChart.Series<>();
-        dataSeries.getData().add(new XYChart.Data<>("2023-01-07", 2));
-        dataSeries.getData().add(new XYChart.Data<>("2023-02-10", 3));
-        dataSeries.getData().add(new XYChart.Data<>("2023-03-15", 4));
-        dataSeries.getData().add(new XYChart.Data<>("2023-04-20", 5));
-
-        lineChart.getData().add(dataSeries);
-        lineChart.setLegendVisible(false);
-
-        for (XYChart.Series<String, Number> series : lineChart.getData()) {
-            for (XYChart.Data<String, Number> data : series.getData()) {
-                data.getNode().setStyle("-fx-background-color: " + toHex(lineColor) + ";");
-            }
-        }
-
-        return lineChart;
     }
 
     private String toHex(Color color) {

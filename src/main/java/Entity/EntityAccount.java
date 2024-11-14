@@ -1,6 +1,8 @@
 package Entity;
 
 import java.math.BigDecimal;
+import java.sql.Date;
+
 
 public class EntityAccount {
     private int customerId;
@@ -10,17 +12,20 @@ public class EntityAccount {
     private String address;
     private String status;
 
-    public int getPin() {
-        return pin;
+    public int getEmployee_id() {
+        return employee_id;
     }
 
-    public void setPin(int pin) {
-        this.pin = pin;
+    public void setEmployee_id(int employee_id) {
+        this.employee_id = employee_id;
     }
 
+    private int employee_id;
+
+    private Date createdate;
+    private Date validationdate;
     private int pin;
 
-    // Getters and Setters
     public int getCustomerId() {
         return customerId;
     }
@@ -67,5 +72,42 @@ public class EntityAccount {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+//    public int getEmployeeid() {
+//        return employeeid;
+//    }
+//
+//    public void setEmployeeid(int employeeid) {
+//        this.employeeid = employeeid;
+//    }
+
+    public Date getCreatedate() {
+        return createdate;
+    }
+
+    public void setCreatedate(Date createdate) {
+        this.createdate = createdate;
+    }
+
+
+    public Date getValidationdate() {
+        return validationdate;
+    }
+
+    public void setValidationdate(Date validationdate ) {
+        this.validationdate = validationdate;
+    }
+
+    public int getPin() {
+        return pin;
+    }
+
+    public void setPin(int pin) {
+        this.pin = pin;
+    }
+
+    public void generatePin() {
+        this.pin = (int)(Math.random() * 900000 + 100000); // Sinh mã PIN ngẫu nhiên 6 chữ số
     }
 }

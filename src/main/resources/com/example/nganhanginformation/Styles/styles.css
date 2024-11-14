@@ -1,0 +1,70 @@
+.label {
+    -fx-font-size: 14px;
+}
+
+.button {
+    -fx-background-color: transparent;
+    -fx-font-size: 14px;
+    -fx-cursor: hand;
+}
+
+.button:hover {
+    -fx-background-color: #e0e0e0;
+    -fx-border-radius: 50%;
+}
+
+.label-day {
+    -fx-font-size: 14px;
+    -fx-alignment: center;
+}
+
+.label-day-selected {
+    -fx-background-color: #007bff;
+    -fx-text-fill: white;
+    -fx-background-radius: 50%;
+    -fx-alignment: center;
+}
+/* Định dạng cho CalendarBox */
+.calendar-box-container {
+    -fx-background-color: #ffffff; /* Màu nền sáng */
+    -fx-border-radius: 15px; /* Vòng bo mềm mại */
+    -fx-padding: 20px; /* Padding nội dung */
+    -fx-border-color: #dcdcdc; /* Màu viền nhẹ */
+    -fx-border-width: 2px; /* Độ dày viền */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 10, 0, 5, 5); /* Bóng đổ nhẹ cho CalendarBox */
+}
+
+/* Định dạng cho từng phần tử của CalendarBox */
+.calendar-box-content {
+    -fx-background-color: #f9f9f9; /* Màu nền sáng hơn cho phần tử bên trong */
+    -fx-border-radius: 12px; /* Vòng bo mềm mại cho từng phần tử */
+    -fx-border-color: #b0b0b0; /* Màu viền nhẹ */
+    -fx-border-width: 1px; /* Độ dày viền */
+    -fx-padding: 15px; /* Padding cho phần tử bên trong */
+}
+
+/* Định dạng cho các ngày trong CalendarBox */
+.calendar-day {
+    -fx-background-color: #ecf0f1; /* Màu nền nhẹ cho các ngày */
+    -fx-border-radius: 50%; /* Vòng bo tròn cho các ngày */
+    -fx-padding: 10px; /* Padding cho các ngày */
+    -fx-text-fill: #2c3e50; /* Màu chữ cho các ngày */
+    -fx-font-weight: bold; /* Làm đậm chữ */
+    -fx-font-size: 14px; /* Kích thước chữ */
+    -fx-alignment: center; /* Căn giữa nội dung */
+}
+
+.calendar-day:hover {
+    -fx-background-color: #3498db; /* Màu nền khi hover */
+    -fx-text-fill: white; /* Đổi màu chữ khi hover */
+}
+
+/* Định dạng cho Header của CalendarBox */
+.calendar-header {
+    -fx-background-color: #34495e; /* Màu nền tối cho header */
+    -fx-text-fill: white; /* Màu chữ trắng */
+    -fx-padding: 10px; /* Padding cho header */
+    -fx-font-weight: bold; /* Làm đậm chữ trong header */
+    -fx-font-size: 16px; /* Kích thước chữ */
+    -fx-alignment: center; /* Căn giữa nội dung */
+}

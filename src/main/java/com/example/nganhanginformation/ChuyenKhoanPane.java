@@ -237,8 +237,6 @@ public class ChuyenKhoanPane extends AnchorPane {
         paymentOrderForm.start(printStage);
     }
 
-
-
     private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
@@ -264,22 +262,17 @@ public class ChuyenKhoanPane extends AnchorPane {
             return "Không đồng";
         }
 
-        // Biến lưu trữ phần nguyên và phần thập phân
         long integerPart = (long) amount;
         int decimalPart = (int) Math.round((amount - integerPart) * 100);
 
-        // Danh sách các đơn vị tiền tệ và số đếm
         String[] ones = {"", "Một", "Hai", "Ba", "Bốn", "Năm", "Sáu", "Bảy", "Tám", "Chín"};
         String[] tens = {"", "Mười", "Hai mươi", "Ba mươi", "Bốn mươi", "Năm mươi", "Sáu mươi", "Bảy mươi", "Tám mươi", "Chín mươi"};
         String[] powers = {"", "nghìn", "triệu", "tỷ", "nghìn tỷ", "triệu tỷ"};
 
-        // Chuyển phần nguyên thành chữ
         String integerWords = convertIntegerToWords(integerPart, ones, tens, powers);
 
-        // Chuyển phần thập phân thành chữ
         String decimalWords = decimalPart > 0 ? "với " + convertIntegerToWords(decimalPart, ones, tens, new String[]{}) + " xu" : "";
 
-        // Kết hợp phần nguyên và phần thập phân
         return integerWords + " đồng " + decimalWords;
     }
 
@@ -291,7 +284,6 @@ public class ChuyenKhoanPane extends AnchorPane {
         StringBuilder words = new StringBuilder();
         int powerIndex = 0;
 
-        // Chuyển đổi từng phần ba chữ số một
         while (number > 0) {
             int part = (int) (number % 1000);
             if (part > 0) {
