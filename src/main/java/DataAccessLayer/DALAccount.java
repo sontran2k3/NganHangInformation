@@ -13,10 +13,9 @@ import java.util.List;
 
 public class DALAccount {
 
-    // Phương thức lấy danh sách tất cả khách hàng
     public List<EntityAccount> getAllCustomers() {
         List<EntityAccount> customerList = new ArrayList<>();
-        String sql = "SELECT c.customer_id, c.fullname, a.account_type, a.balance, c.address, a.status , a.pin " +
+        String sql = "SELECT c.customer_id, c.fullname, a.account_type, a.balance, a.create_date, a.status , a.pin " +
                 "FROM customer c " +
                 "JOIN account a ON c.customer_id = a.customer_id";
 
@@ -24,14 +23,13 @@ public class DALAccount {
              PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
 
-            // Lặp qua kết quả truy vấn và thêm vào danh sách
             while (rs.next()) {
                 EntityAccount customer = new EntityAccount();
                 customer.setCustomerId(rs.getInt("customer_id"));
                 customer.setFullname(rs.getString("fullname"));
                 customer.setAccountType(rs.getString("account_type"));
                 customer.setBalance(rs.getBigDecimal("balance"));
-                customer.setAddress(rs.getString("address"));
+                customer.setCreatedate(rs.getDate("create_date"));
                 customer.setStatus(rs.getString("status"));
                 customer.setPin(rs.getInt("pin"));
                 customerList.add(customer);
@@ -44,7 +42,6 @@ public class DALAccount {
         return customerList;
     }
 
-    // Phương thức tìm tên khách hàng dựa vào số tài khoản
     public String getCustomerNameByAccount(String accountNumber) {
         String query = "SELECT fullname FROM customer WHERE customer_id = ?";
         try (Connection conn = DBContext.getConnection();
@@ -63,7 +60,6 @@ public class DALAccount {
         return null;
     }
 
-    // Phương thức lưu giao dịch
     public boolean validatePin(String accountNumber, int pin) {
         String query = "SELECT pin FROM account WHERE account_id = ?";
         try (Connection conn = DBContext.getConnection();
@@ -104,22 +100,19 @@ public class DALAccount {
                 }
             }
 
-            // Update sender's balance
             try (PreparedStatement ps = conn.prepareStatement(sqlUpdateSender)) {
                 ps.setDouble(1, totalAmount); // trừ số tiền bao gồm cả phí giao dịch
                 ps.setString(2, senderAccount);
                 ps.executeUpdate();
             }
 
-            // Update receiver's balance
             try (PreparedStatement ps = conn.prepareStatement(sqlUpdateReceiver)) {
-                ps.setDouble(1, amount); // chỉ cộng số tiền gốc
+                ps.setDouble(1, amount);
                 ps.setString(2, receiverAccount);
                 ps.executeUpdate();
             }
 
-            // Log the transaction
-            String referenceCode = generateReferenceCode(); // Tạo mã tham chiếu
+            String referenceCode = generateReferenceCode();
             try (PreparedStatement ps = conn.prepareStatement(sqlInsertTransaction)) {
                 ps.setString(1, senderAccount);
                 ps.setString(2, receiverAccount);
@@ -138,12 +131,10 @@ public class DALAccount {
         }
     }
 
-    // Method để tính phí giao dịch (tùy chỉnh theo quy định)
     private double calculateTransactionFee(double amount) {
         return amount * 0.01; // Giả định phí là 1% số tiền giao dịch
     }
 
-    // Method để tạo mã tham chiếu giao dịch
     private String generateReferenceCode() {
         return "TXN-" + System.currentTimeMillis();
     }
@@ -161,8 +152,68 @@ public class DALAccount {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        return null; // Trả về null nếu không tìm thấy mã tham chiếu
+        return null;
     }
+    public void addAccount(EntityAccount account) {
+        String sql = "INSERT INTO account (customer_id, employee_id,  account_type, balance, status, pin, create_date, validation_date) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+
+        try (Connection conn = DBContext.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, account.getCustomerId());
+            ps.setInt(2,account.getEmployee_id());
+            ps.setString(3, account.getAccountType());
+            ps.setBigDecimal(4, account.getBalance());
+            ps.setString(5, account.getStatus());
+            ps.setInt(6, account.getPin());
+            ps.setDate(7, account.getCreatedate());
+            ps.setDate(8, account.getValidationdate());
+
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void updateAccount(EntityAccount account) {
+        String sql = "UPDATE account SET  employee_id = ?, account_type = ?, balance = ?, status = ?, pin = ?, create_date = ?, validation_date = ? WHERE customer_id = ?";
+
+        try (Connection conn = DBContext.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, account.getEmployee_id());
+            ps.setString(2, account.getAccountType());
+            ps.setBigDecimal(3, account.getBalance());
+            ps.setString(4, account.getStatus());
+            ps.setInt(5, account.getPin());
+            ps.setDate(6, account.getCreatedate());
+            ps.setDate(7, account.getValidationdate());
+            ps.setInt(8, account.getCustomerId());
+
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void deleteAccountById(int customerId) {
+        String query = "DELETE FROM Account WHERE customer_id = ?";
+        try (Connection conn = DBContext.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setInt(1, customerId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
 
 

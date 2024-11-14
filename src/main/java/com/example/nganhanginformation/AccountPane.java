@@ -12,6 +12,10 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.*;
 
+import java.math.BigDecimal;
+import java.sql.Date;
+import java.time.LocalDate;
+
 public class AccountPane extends AnchorPane {
 
     private TableView<EntityAccount> tableView;
@@ -53,9 +57,9 @@ public class AccountPane extends AnchorPane {
         balanceCol.setCellValueFactory(new PropertyValueFactory<>("balance"));
         balanceCol.setMinWidth(165);
 
-        TableColumn<EntityAccount, String> addressCol = new TableColumn<>("Địa chỉ");
-        addressCol.setCellValueFactory(new PropertyValueFactory<>("address"));
-        addressCol.setMinWidth(165);
+        TableColumn<EntityAccount, Date> createdateCol = new TableColumn<>("Ngày kích hoạt");
+        createdateCol.setCellValueFactory(new PropertyValueFactory<>("createdate"));  // Đảm bảo tên thuộc tính đúng
+        createdateCol.setMinWidth(165);
 
         TableColumn<EntityAccount, String> statusCol = new TableColumn<>("Trạng thái tài khoản");
         statusCol.setCellValueFactory(new PropertyValueFactory<>("status"));
@@ -65,7 +69,7 @@ public class AccountPane extends AnchorPane {
         pinCol.setCellValueFactory(new PropertyValueFactory<>("pin"));
         pinCol.setMinWidth(165);
 
-        tableView.getColumns().addAll(idCol, fullnameCol, cccdCol, balanceCol, addressCol, statusCol, pinCol);
+        tableView.getColumns().addAll(idCol, fullnameCol, cccdCol, balanceCol, createdateCol, statusCol, pinCol);
 
         dataList = FXCollections.observableArrayList(dalAccount.getAllCustomers());
         tableView.setItems(dataList);
@@ -74,9 +78,6 @@ public class AccountPane extends AnchorPane {
         tableContainer.setSpacing(10);
         tableContainer.setPadding(new Insets(10));
 
-
-
-        // Thêm form quản lý tài khoản dưới bảng
         VBox accountManagementContainer = createAccountManagementForm();
 
         VBox mainContainer = new VBox(tableContainer, accountManagementContainer);
@@ -106,7 +107,7 @@ public class AccountPane extends AnchorPane {
 
         Label customerIdLabel = new Label("Tên khách hàng:");
         TextField customerField = new TextField();
-        customerField.setEditable(false);  // Tên khách hàng sẽ không thể chỉnh sửa
+        customerField.setEditable(false);
         grid.add(customerIdLabel, 0, 2);
         grid.add(customerField, 1, 2);
 
@@ -147,6 +148,96 @@ public class AccountPane extends AnchorPane {
         Button updateButton = new Button("Cập nhật tài khoản");
         Button deleteButton = new Button("Xóa tài khoản");
 
+        addButton.setOnAction(event -> {
+            EntityAccount newAccount = new EntityAccount();
+
+            int customerId = Integer.parseInt(accountIdField.getText().trim());
+            String accountType = accountTypeComboBox.getValue();
+            String status = statusComboBox.getValue();
+            BigDecimal balance = new BigDecimal(balanceField.getText().trim());
+            int employeeId = Integer.parseInt(employeeIdField.getText().trim());
+
+            newAccount.setCustomerId(customerId);
+            newAccount.setFullname(customerField.getText());
+            newAccount.setAccountType(accountType);
+            newAccount.setBalance(balance);
+            newAccount.setStatus(status);
+            newAccount.setEmployee_id(employeeId);
+
+            LocalDate localDate = LocalDate.now();
+            Date currentDate = Date.valueOf(localDate);
+
+            newAccount.setCreatedate(currentDate);
+            newAccount.setValidationdate(currentDate);
+
+            newAccount.generatePin();
+
+            dalAccount.addAccount(newAccount);
+            dataList.add(newAccount);
+
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Thông báo");
+            alert.setHeaderText("Thêm tài khoản thành công");
+            alert.show();
+        });
+
+        tableView.setOnMouseClicked(event -> {
+            EntityAccount selectedAccount = tableView.getSelectionModel().getSelectedItem();
+            if (selectedAccount != null) {
+                accountIdField.setText(String.valueOf(selectedAccount.getCustomerId()));
+                customerField.setText(selectedAccount.getFullname());
+                employeeIdField.setText(String.valueOf(selectedAccount.getEmployee_id()));  // Kiểm tra xem employeeId có giá trị hợp lệ
+                createDatePicker.setValue(selectedAccount.getCreatedate().toLocalDate());
+
+                if (selectedAccount.getValidationdate() != null) {
+                    validationDatePicker.setValue(selectedAccount.getValidationdate().toLocalDate());
+                } else {
+                    validationDatePicker.setValue(selectedAccount.getCreatedate().toLocalDate());
+                }
+                accountTypeComboBox.setValue(selectedAccount.getAccountType());
+                statusComboBox.setValue(selectedAccount.getStatus());
+                balanceField.setText(String.valueOf(selectedAccount.getBalance()));
+            }
+        });
+
+        updateButton.setOnAction(event -> {
+            EntityAccount selectedAccount = tableView.getSelectionModel().getSelectedItem();
+            if (selectedAccount != null) {
+                try {
+                    int customerId = Integer.parseInt(accountIdField.getText().trim());
+                    String accountType = accountTypeComboBox.getValue();
+                    String status = statusComboBox.getValue();
+                    BigDecimal balance = new BigDecimal(balanceField.getText().trim());
+                    int employeeId = Integer.parseInt(employeeIdField.getText().trim());
+
+                    selectedAccount.setCustomerId(customerId);
+                    selectedAccount.setFullname(customerField.getText());
+                    selectedAccount.setAccountType(accountType);
+                    selectedAccount.setBalance(balance);
+                    selectedAccount.setStatus(status);
+                    selectedAccount.setEmployee_id(employeeId);
+
+                    LocalDate createDate = createDatePicker.getValue();
+                    selectedAccount.setCreatedate(Date.valueOf(createDate));
+                    LocalDate validationDate = validationDatePicker.getValue();
+                    selectedAccount.setValidationdate(Date.valueOf(validationDate));
+
+                    dalAccount.updateAccount(selectedAccount);
+
+                    tableView.refresh();
+
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Thông báo");
+                    alert.setHeaderText("Cập nhật tài khoản thành công");
+                    alert.show();
+                } catch (NumberFormatException e) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Lỗi");
+                    alert.setHeaderText("Dữ liệu không hợp lệ");
+                    alert.show();
+                }
+            }
+        });
         accountIdField.setOnKeyReleased(event -> {
             try {
                 int customerId = Integer.parseInt(accountIdField.getText().trim());
@@ -157,7 +248,34 @@ public class AccountPane extends AnchorPane {
                     customerField.clear();
                 }
             } catch (NumberFormatException e) {
-                customerField.clear(); // Nếu không phải số hợp lệ, xóa tên
+                customerField.clear();
+            }
+        });
+        deleteButton.setOnAction(event -> {
+            EntityAccount selectedAccount = tableView.getSelectionModel().getSelectedItem();
+            if (selectedAccount != null) {
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Xác nhận xóa");
+                alert.setHeaderText("Bạn có chắc chắn muốn xóa tài khoản này?");
+                alert.setContentText("Mã tài khoản: " + selectedAccount.getCustomerId());
+
+                alert.showAndWait().ifPresent(response -> {
+                    if (response == ButtonType.OK) {
+                        dalAccount.deleteAccount(selectedAccount.getCustomerId());
+                        dataList.remove(selectedAccount);
+
+                        Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
+                        successAlert.setTitle("Thông báo");
+                        successAlert.setHeaderText("Xóa tài khoản thành công");
+                        successAlert.show();
+                    }
+                });
+            } else {
+                Alert noSelectionAlert = new Alert(Alert.AlertType.WARNING);
+                noSelectionAlert.setTitle("Cảnh báo");
+                noSelectionAlert.setHeaderText("Chưa chọn tài khoản");
+                noSelectionAlert.setContentText("Vui lòng chọn tài khoản cần xóa.");
+                noSelectionAlert.show();
             }
         });
 
@@ -183,8 +301,6 @@ public class AccountPane extends AnchorPane {
 
         grid.add(buttonBox, 0, 5, 4, 1);
         Scene scene = new Scene(formContainer, 800, 500);
-
-
 
         return formContainer;
     }

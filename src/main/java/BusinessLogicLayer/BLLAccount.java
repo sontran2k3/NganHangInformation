@@ -27,6 +27,17 @@ public class BLLAccount {
     public String getLastReferenceCode() {
         return dalAccount.getLastReferenceCode();
     }
+    public void addAccount(EntityAccount account) {
+        DALAccount dalAccount = new DALAccount();
+        dalAccount.addAccount(account);
+    }
+
+    public void updateAccount(EntityAccount account) {
+        dalAccount.updateAccount(account);
+    }
+    public void deleteAccount(int customerId) {
+        dalAccount.deleteAccountById(customerId);
+    }
 
 
 

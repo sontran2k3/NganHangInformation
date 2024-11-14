@@ -141,11 +141,9 @@ public class KhachHangPane extends AnchorPane {
 
         TableColumn<EntityKhachHang, String> cccdCol = new TableColumn<>("CMND/CCCD");
         cccdCol.setCellValueFactory(new PropertyValueFactory<>("cccd"));
-        cccdCol.setMinWidth(100);
+        cccdCol.setMinWidth(125);
 
-        TableColumn<EntityKhachHang, String> genderCol = new TableColumn<>("Giới Tính");
-        genderCol.setCellValueFactory(new PropertyValueFactory<>("gender"));
-        genderCol.setMinWidth(50);
+
 
         TableColumn<EntityKhachHang, String> phoneCol = new TableColumn<>("Số Điện Thoại");
         phoneCol.setCellValueFactory(new PropertyValueFactory<>("phone"));
@@ -157,7 +155,7 @@ public class KhachHangPane extends AnchorPane {
 
         TableColumn<EntityKhachHang, String> addressCol = new TableColumn<>("Địa Chỉ");
         addressCol.setCellValueFactory(new PropertyValueFactory<>("address"));
-        addressCol.setMinWidth(150);
+        addressCol.setMinWidth(175);
 
         TableColumn<EntityKhachHang, String> emailCol = new TableColumn<>("Email");
         emailCol.setCellValueFactory(new PropertyValueFactory<>("email"));
@@ -167,7 +165,7 @@ public class KhachHangPane extends AnchorPane {
         occupationCol.setCellValueFactory(new PropertyValueFactory<>("occupation"));
         occupationCol.setMinWidth(150);
 
-        tableView.getColumns().addAll(idCol, fullnameCol, cccdCol, genderCol, phoneCol, birthdayCol, addressCol, emailCol, occupationCol);
+        tableView.getColumns().addAll(idCol, fullnameCol, cccdCol, phoneCol, birthdayCol, addressCol, emailCol, occupationCol);
 
         dataList = FXCollections.observableArrayList(bllKhachHang.getAllCustomers());
         tableView.setItems(dataList);
@@ -176,11 +174,10 @@ public class KhachHangPane extends AnchorPane {
         searchField.setPromptText("Search...");
         searchField.textProperty().addListener((observable, oldValue, newValue) -> filterData(newValue));
 
-        Button addCustomerButton = new Button("Thêm Khách Hàng");
 
 
         inputFieldsBox.getChildren().add(grid); // Đưa grid vào VBox
-        container.getChildren().addAll(inputFieldsBox, searchField, addCustomerButton, tableView);
+        container.getChildren().addAll(inputFieldsBox, searchField, tableView);
         this.getChildren().add(container);
         AnchorPane.setTopAnchor(container, 70.0);
         AnchorPane.setLeftAnchor(container, 20.0);
