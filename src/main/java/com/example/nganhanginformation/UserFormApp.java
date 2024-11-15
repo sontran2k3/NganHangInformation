@@ -18,13 +18,11 @@ public class UserFormApp extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        // Tạo một GridPane để bố trí các trường nhập liệu
         GridPane grid = new GridPane();
         grid.setVgap(15);
         grid.setHgap(10);
         grid.setStyle("-fx-background-color: #f4f4f4; -fx-padding: 20px;");
 
-        // Cài đặt cột và hàng cho GridPane
         ColumnConstraints col1 = new ColumnConstraints();
         col1.setHalignment(HPos.RIGHT);
         ColumnConstraints col2 = new ColumnConstraints();
@@ -35,7 +33,6 @@ public class UserFormApp extends Application {
         col4.setHgrow(Priority.ALWAYS);
         grid.getColumnConstraints().addAll(col1, col2, col3, col4);
 
-        // Tạo các trường nhập liệu
         TextField fullNameField = new TextField();
         TextField cccdField = new TextField();
         DatePicker birthdayPicker = new DatePicker();
