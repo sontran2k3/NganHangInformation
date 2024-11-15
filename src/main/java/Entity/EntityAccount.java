@@ -5,6 +5,15 @@ import java.sql.Date;
 
 
 public class EntityAccount {
+    public int getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(int accountId) {
+        this.accountId = accountId;
+    }
+
+    private int accountId;
     private int customerId;
     private String fullname;
     private String accountType;

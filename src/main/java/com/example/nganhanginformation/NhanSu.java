@@ -81,16 +81,14 @@ public class NhanSu extends Application {
         AnchorPane.setTopAnchor(mainContent, 20.0);
         AnchorPane.setLeftAnchor(mainContent, 250.0);
 
-        // Khởi tạo các pane cho các chức năng khác nhau
         homePane = new KhachHangPane(scene);
         infoPane = new AccountPane(scene);
-        chuyenkhoanPane = new ChuyenKhoanPane(scene); // Đảm bảo các pane này đã được định nghĩa
+        chuyenkhoanPane = new ChuyenKhoanPane(scene);
         naptienPane = new NapTienPane(scene);
         ruttienPane = new RutTienPane(scene);
-        managePane = new ManagePane();
+        managePane = new ManagePane(scene);
         settingsPane = new ThongKePane();
 
-        // Thêm các pane vào mainContent
         mainContent.getChildren().addAll(homePane, infoPane, chuyenkhoanPane, naptienPane, ruttienPane, managePane, settingsPane);
 
         // Thiết lập sự kiện cho các nút
@@ -136,9 +134,9 @@ public class NhanSu extends Application {
 
     private void switchPane(AnchorPane paneToShow) {
         for (Node node : mainContent.getChildren()) {
-            node.setVisible(false); // Ẩn tất cả các pane
+            node.setVisible(false);
         }
-        paneToShow.setVisible(true); // Hiển thị pane đã chọn
+        paneToShow.setVisible(true);
     }
 
     private void handleLogout() {

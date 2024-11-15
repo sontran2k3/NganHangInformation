@@ -16,6 +16,9 @@ import java.math.BigDecimal;
 import java.sql.Date;
 import java.time.LocalDate;
 
+
+
+
 public class AccountPane extends AnchorPane {
 
     private TableView<EntityAccount> tableView;
@@ -42,8 +45,9 @@ public class AccountPane extends AnchorPane {
         tableView.getStyleClass().add("table-view");
 
         TableColumn<EntityAccount, Integer> idCol = new TableColumn<>("Mã tài khoản");
-        idCol.setCellValueFactory(new PropertyValueFactory<>("customerId"));
+        idCol.setCellValueFactory(new PropertyValueFactory<>("accountId")); // Đảm bảo sử dụng tên đúng là "accountId"
         idCol.setMinWidth(165);
+
 
         TableColumn<EntityAccount, String> fullnameCol = new TableColumn<>("Tên khách hàng");
         fullnameCol.setCellValueFactory(new PropertyValueFactory<>("fullname"));
@@ -93,8 +97,8 @@ public class AccountPane extends AnchorPane {
     private VBox createAccountManagementForm() {
         GridPane grid = new GridPane();
         grid.setPadding(new Insets(20, 20, 20, 20));
-        grid.setVgap(15);
-        grid.setHgap(20);
+        grid.setVgap(10);
+        grid.setHgap(10);
 
         Label titleLabel = new Label("Thông Tin Tài Khoản");
         titleLabel.getStyleClass().add("title-label");
@@ -150,13 +154,14 @@ public class AccountPane extends AnchorPane {
 
         addButton.setOnAction(event -> {
             EntityAccount newAccount = new EntityAccount();
-
+            int randomEmployeeId = generateRandomAccounnt();
             int customerId = Integer.parseInt(accountIdField.getText().trim());
             String accountType = accountTypeComboBox.getValue();
             String status = statusComboBox.getValue();
             BigDecimal balance = new BigDecimal(balanceField.getText().trim());
             int employeeId = Integer.parseInt(employeeIdField.getText().trim());
 
+            newAccount.setAccountId(randomEmployeeId);
             newAccount.setCustomerId(customerId);
             newAccount.setFullname(customerField.getText());
             newAccount.setAccountType(accountType);
@@ -184,7 +189,7 @@ public class AccountPane extends AnchorPane {
         tableView.setOnMouseClicked(event -> {
             EntityAccount selectedAccount = tableView.getSelectionModel().getSelectedItem();
             if (selectedAccount != null) {
-                accountIdField.setText(String.valueOf(selectedAccount.getCustomerId()));
+                accountIdField.setText(String.valueOf(selectedAccount.getAccountId()));
                 customerField.setText(selectedAccount.getFullname());
                 employeeIdField.setText(String.valueOf(selectedAccount.getEmployee_id()));  // Kiểm tra xem employeeId có giá trị hợp lệ
                 createDatePicker.setValue(selectedAccount.getCreatedate().toLocalDate());
@@ -318,5 +323,9 @@ public class AccountPane extends AnchorPane {
             }
         }
         tableView.setItems(filteredData);
+    }
+
+    private int generateRandomAccounnt() {
+        return (int) (Math.random() * 900000) + 100000;
     }
 }

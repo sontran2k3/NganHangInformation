@@ -3,14 +3,12 @@
     -fx-text-fill: #2c3e50;
 }
 
-/* Định dạng nhãn số liệu */
 .info-label {
     -fx-font-size: 24px;
     -fx-text-fill: white;
     -fx-font-weight: bold;
 }
 
-/* Định dạng nhãn mô tả */
 .info-text {
     -fx-font-size: 14px;
     -fx-text-fill: white;

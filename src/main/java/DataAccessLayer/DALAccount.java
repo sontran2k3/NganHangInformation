@@ -15,7 +15,7 @@ public class DALAccount {
 
     public List<EntityAccount> getAllCustomers() {
         List<EntityAccount> customerList = new ArrayList<>();
-        String sql = "SELECT c.customer_id, c.fullname, a.account_type, a.balance, a.create_date, a.status , a.pin " +
+        String sql = "SELECT a.account_id, c.fullname, a.account_type, a.balance, a.create_date, a.status , a.pin " +
                 "FROM customer c " +
                 "JOIN account a ON c.customer_id = a.customer_id";
 
@@ -25,7 +25,7 @@ public class DALAccount {
 
             while (rs.next()) {
                 EntityAccount customer = new EntityAccount();
-                customer.setCustomerId(rs.getInt("customer_id"));
+                customer.setAccountId(rs.getInt("account_id"));
                 customer.setFullname(rs.getString("fullname"));
                 customer.setAccountType(rs.getString("account_type"));
                 customer.setBalance(rs.getBigDecimal("balance"));
@@ -155,20 +155,21 @@ public class DALAccount {
         return null;
     }
     public void addAccount(EntityAccount account) {
-        String sql = "INSERT INTO account (customer_id, employee_id,  account_type, balance, status, pin, create_date, validation_date) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO account (account_id, customer_id, employee_id,  account_type, balance, status, pin, create_date, validation_date) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = DBContext.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            ps.setInt(1, account.getCustomerId());
-            ps.setInt(2,account.getEmployee_id());
-            ps.setString(3, account.getAccountType());
-            ps.setBigDecimal(4, account.getBalance());
-            ps.setString(5, account.getStatus());
-            ps.setInt(6, account.getPin());
-            ps.setDate(7, account.getCreatedate());
-            ps.setDate(8, account.getValidationdate());
+            ps.setInt(1, account.getAccountId());
+            ps.setInt(2, account.getCustomerId());
+            ps.setInt(3,account.getEmployee_id());
+            ps.setString(4, account.getAccountType());
+            ps.setBigDecimal(5, account.getBalance());
+            ps.setString(6, account.getStatus());
+            ps.setInt(7, account.getPin());
+            ps.setDate(8, account.getCreatedate());
+            ps.setDate(9, account.getValidationdate());
 
             ps.executeUpdate();
         } catch (SQLException e) {

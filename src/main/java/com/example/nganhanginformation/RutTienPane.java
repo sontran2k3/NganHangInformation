@@ -62,7 +62,7 @@ public class RutTienPane extends AnchorPane {
 
     private void setupTableColumns() {
         TableColumn<EntityAccount, Integer> idCol = new TableColumn<>("Mã tài khoản");
-        idCol.setCellValueFactory(new PropertyValueFactory<>("customerId"));
+        idCol.setCellValueFactory(new PropertyValueFactory<>("accountId"));
         idCol.setMinWidth(100);
 
         TableColumn<EntityAccount, String> fullnameCol = new TableColumn<>("Tên khách hàng");
@@ -73,8 +73,8 @@ public class RutTienPane extends AnchorPane {
         balanceCol.setCellValueFactory(new PropertyValueFactory<>("balance"));
         balanceCol.setMinWidth(165);
 
-        TableColumn<EntityAccount, String> addressCol = new TableColumn<>("Địa chỉ");
-        addressCol.setCellValueFactory(new PropertyValueFactory<>("address"));
+        TableColumn<EntityAccount, String> addressCol = new TableColumn<>("Ngày kích hoạt");
+        addressCol.setCellValueFactory(new PropertyValueFactory<>("createdate"));
         addressCol.setMinWidth(165);
 
         TableColumn<EntityAccount, String> statusCol = new TableColumn<>("Trạng thái tài khoản");

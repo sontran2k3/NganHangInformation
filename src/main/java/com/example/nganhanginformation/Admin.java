@@ -48,16 +48,12 @@ public class Admin extends Application {
         logoView.setFitWidth(200);
         logoView.setPreserveRatio(true);
 
-        // Create a line below the logo
         Line lineBelowLogo = new Line(0, 0, 200, 0);
         lineBelowLogo.setStrokeWidth(1);
         lineBelowLogo.setStyle("-fx-stroke: gray;");
 
-        Button btnHome = createStyledButton("Trang chủ", "/com/example/nganhanginformation/Image/home.png");
-        Button btnInfo = createStyledButton("Người dùng", "/com/example/nganhanginformation/Image/user.png");
-        Button btnManage = createStyledButton("Quản lý", "/com/example/nganhanginformation/Image/management.png");
-        Button btnSettings = createStyledButton("Cài đặt", "/com/example/nganhanginformation/Image/settings.png");
-
+        Button btnHome = createStyledButton("Trang Chủ", "/com/example/nganhanginformation/Image/home.png");
+        Button btnManage = createStyledButton("Quản lý nhân sự", "/com/example/nganhanginformation/Image/user.png");
         Button btnLogout = createStyledButton("Đăng xuất", "/com/example/nganhanginformation/Image/logout.png");
         btnLogout.setOnAction(e -> handleLogout());
 
@@ -69,7 +65,7 @@ public class Admin extends Application {
         outerFrame.getStyleClass().add("outer-frame");
         outerFrame.getChildren().add(logoContainer);
 
-        logoContainer.getChildren().addAll(logoView, lineBelowLogo, btnHome, btnInfo, btnManage, btnSettings);
+        logoContainer.getChildren().addAll(logoView, lineBelowLogo,btnHome, btnManage);
 
         Region spacer = new Region();
         VBox.setVgrow(spacer, javafx.scene.layout.Priority.ALWAYS);
@@ -79,26 +75,23 @@ public class Admin extends Application {
         AnchorPane.setTopAnchor(mainContent, 20.0);
         AnchorPane.setLeftAnchor(mainContent, 250.0);
 
-        KhachHangPane homePane = new KhachHangPane(scene);
-        AccountPane infoPane = new AccountPane(scene);
-        ManagePane managePane = new ManagePane();
-        ThongKePane settingsPane = new ThongKePane();
+        ThongKePane HomePane = new ThongKePane();
+        ManagePane managePane = new ManagePane(scene);
 
-        mainContent.getChildren().addAll(homePane, infoPane, managePane, settingsPane);
 
-        btnHome.setOnAction(e -> switchPane(homePane));
-        btnInfo.setOnAction(e -> switchPane(infoPane));
+        mainContent.getChildren().addAll( HomePane, managePane);
+
+        btnHome.setOnAction(e -> switchPane(HomePane));
         btnManage.setOnAction(e -> switchPane(managePane));
-        btnSettings.setOnAction(e -> switchPane(settingsPane));
 
         anchorPane.getChildren().addAll(outerFrame, mainContent);
         AnchorPane.setTopAnchor(outerFrame, 0.0);
         AnchorPane.setLeftAnchor(outerFrame, 0.0);
         AnchorPane.setBottomAnchor(outerFrame, 0.0);
 
-        switchPane(homePane);
+        switchPane(HomePane);
 
-        scene.getStylesheets().add(getClass().getResource("Styles/nhansu.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getResource("Styles/admin.css").toExternalForm());
     }
 
     private void switchPane(AnchorPane paneToShow) {
