@@ -30,9 +30,9 @@ public class ThongKePane extends AnchorPane {
         String transactionCount = String.valueOf(getMonthlyStatistics("transaction"));
         String revenue = String.format("%.2f", getMonthlyStatistics("revenue"));
 
-        Label totalAccounts = createInfoLabel(accountCount, "Số đơn bán ra trong ngày", Color.web("#4a90e2"));
-        Label totalTransactions = createInfoLabel(transactionCount, "Số sản phẩm bán trong ngày", Color.web("#50e3c2"));
-        Label totalRevenue = createInfoLabel(revenue + " VND", "Doanh thu ngày", Color.web("#b0b0b0"));
+        Label totalAccounts = createInfoLabel(accountCount, "Số tài khoản trong tháng", Color.web("#4a90e2"));
+        Label totalTransactions = createInfoLabel(transactionCount, "Số giao dịch trong tháng", Color.web("#50e3c2"));
+        Label totalRevenue = createInfoLabel(revenue + " VND", "Doanh thu trong tháng", Color.web("#b0b0b0"));
 
         topPanel.getChildren().addAll(totalAccounts, totalRevenue, totalTransactions);
 

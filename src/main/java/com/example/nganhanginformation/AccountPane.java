@@ -154,15 +154,16 @@ public class AccountPane extends AnchorPane {
 
         addButton.setOnAction(event -> {
             EntityAccount newAccount = new EntityAccount();
-            int randomEmployeeId = generateRandomAccounnt();
-            int customerId = Integer.parseInt(accountIdField.getText().trim());
+            int customerId = Integer.parseInt(accountIdField.getText());
+
             String accountType = accountTypeComboBox.getValue();
             String status = statusComboBox.getValue();
             BigDecimal balance = new BigDecimal(balanceField.getText().trim());
             int employeeId = Integer.parseInt(employeeIdField.getText().trim());
 
-            newAccount.setAccountId(randomEmployeeId);
+
             newAccount.setCustomerId(customerId);
+            newAccount.setAccountId(customerId);
             newAccount.setFullname(customerField.getText());
             newAccount.setAccountType(accountType);
             newAccount.setBalance(balance);
@@ -323,9 +324,5 @@ public class AccountPane extends AnchorPane {
             }
         }
         tableView.setItems(filteredData);
-    }
-
-    private int generateRandomAccounnt() {
-        return (int) (Math.random() * 900000) + 100000;
     }
 }

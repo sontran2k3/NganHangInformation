@@ -5,6 +5,7 @@ import BusinessLogicLayer.BLLKhachHang;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -12,13 +13,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
-
-
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.IOException;
 import java.sql.Date;
 
 public class KhachHangPane extends AnchorPane {
@@ -46,10 +41,11 @@ public class KhachHangPane extends AnchorPane {
         container.setPadding(new Insets(10));
 
         VBox inputFieldsBox = new VBox();
-        inputFieldsBox.setPadding(new Insets(15));
+        inputFieldsBox.setPadding(new Insets(2));
         inputFieldsBox.setStyle("-fx-border-color: #3b8677; -fx-border-width: 2; -fx-border-radius: 10; -fx-background-radius: 10; -fx-background-color: #f5f5f5;");
 
         GridPane grid = new GridPane();
+        grid.setPadding(new Insets(10, 10, 10, 10));
         grid.setVgap(10);
         grid.setHgap(20);
         grid.setPadding(new Insets(10));
@@ -133,7 +129,7 @@ public class KhachHangPane extends AnchorPane {
         tableView = new TableView<>();
         TableColumn<EntityKhachHang, Integer> idCol = new TableColumn<>("ID");
         idCol.setCellValueFactory(new PropertyValueFactory<>("customerId"));
-        idCol.setMinWidth(50);
+        idCol.setMinWidth(100);
 
         TableColumn<EntityKhachHang, String> fullnameCol = new TableColumn<>("Họ Tên");
         fullnameCol.setCellValueFactory(new PropertyValueFactory<>("fullname"));
@@ -142,8 +138,6 @@ public class KhachHangPane extends AnchorPane {
         TableColumn<EntityKhachHang, String> cccdCol = new TableColumn<>("CMND/CCCD");
         cccdCol.setCellValueFactory(new PropertyValueFactory<>("cccd"));
         cccdCol.setMinWidth(125);
-
-
 
         TableColumn<EntityKhachHang, String> phoneCol = new TableColumn<>("Số Điện Thoại");
         phoneCol.setCellValueFactory(new PropertyValueFactory<>("phone"));
@@ -163,7 +157,7 @@ public class KhachHangPane extends AnchorPane {
 
         TableColumn<EntityKhachHang, String> occupationCol = new TableColumn<>("Nghề Nghiệp");
         occupationCol.setCellValueFactory(new PropertyValueFactory<>("occupation"));
-        occupationCol.setMinWidth(150);
+        occupationCol.setMinWidth(100);
 
         tableView.getColumns().addAll(idCol, fullnameCol, cccdCol, phoneCol, birthdayCol, addressCol, emailCol, occupationCol);
 
@@ -174,10 +168,185 @@ public class KhachHangPane extends AnchorPane {
         searchField.setPromptText("Search...");
         searchField.textProperty().addListener((observable, oldValue, newValue) -> filterData(newValue));
 
+        Button addCustomerButton = new Button("Thêm Khách Hàng");
+        Button UpdateCustomerButton = new Button("Cập Nhật Khách Hàng");
+        Button DeleteCustomerButton = new Button("Xóa Khách Hàng");
 
 
-        inputFieldsBox.getChildren().add(grid); // Đưa grid vào VBox
-        container.getChildren().addAll(inputFieldsBox, searchField, tableView);
+
+        addCustomerButton.setOnAction(e -> {
+            int customerId = generateRandomIdKhachHang();
+            String fullname = fullNameField.getText();
+            String cccd = cccdField.getText();
+            Date birthday = birthdayPicker.getValue() != null ? Date.valueOf(birthdayPicker.getValue()) : null;
+            String address = addressField.getText();
+            String phone = phoneField.getText();
+            String email = emailField.getText();
+            String occupation = occupationField.getText();
+            String gender = maleRadio.isSelected() ? "Nam" : "Nữ";
+
+            byte[] profilePicture = profileImageView.getImage() != null ?
+                    getImageBytes(profileImageView.getImage()) : null;
+            byte[] signSample = signImageView.getImage() != null ?
+                    getImageBytes(signImageView.getImage()) : null;
+
+            if (fullname.isEmpty() || cccd.isEmpty() || birthday == null) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setContentText("Vui lòng điền đầy đủ thông tin bắt buộc (Họ tên, CCCD, Ngày sinh)!");
+                alert.show();
+                return;
+            }
+
+            EntityKhachHang newCustomer = new EntityKhachHang();
+            newCustomer.setCustomerId(customerId);
+            newCustomer.setFullname(fullname);
+            newCustomer.setCccd(cccd);
+            newCustomer.setBirthday(birthday);
+            newCustomer.setAddress(address);
+            newCustomer.setPhone(phone);
+            newCustomer.setEmail(email);
+            newCustomer.setOccupation(occupation);
+            newCustomer.setGender(gender);
+            newCustomer.setProfilePicture(profilePicture);
+            newCustomer.setSignSample(signSample);
+
+            boolean isAdded = bllKhachHang.addCustomer(newCustomer);
+            if (isAdded) {
+                dataList.add(newCustomer); // Cập nhật bảng dữ liệu
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setContentText("Thêm khách hàng thành công!");
+                alert.show();
+            } else {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setContentText("CCCD đã tồn tại hoặc xảy ra lỗi khi thêm khách hàng!");
+                alert.show();
+            }
+        });
+        tableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                // Gán giá trị từ EntityKhachHang vào các trường
+                fullNameField.setText(newValue.getFullname());
+                cccdField.setText(newValue.getCccd());
+                birthdayPicker.setValue(newValue.getBirthday() != null ? newValue.getBirthday().toLocalDate() : null);
+                addressField.setText(newValue.getAddress());
+                phoneField.setText(newValue.getPhone());
+                emailField.setText(newValue.getEmail());
+                occupationField.setText(newValue.getOccupation());
+
+                if ("Nam".equals(newValue.getGender())) {
+                    maleRadio.setSelected(true);
+                } else if ("Nữ".equals(newValue.getGender())) {
+                    femaleRadio.setSelected(true);
+                }
+                if (newValue.getProfilePicture() != null) {
+                    profileImageView.setImage(new Image(new java.io.ByteArrayInputStream(newValue.getProfilePicture())));
+                    profileIcon.setVisible(false);
+                } else {
+                    profileImageView.setImage(null);
+                    profileIcon.setVisible(true);
+                }
+                if (newValue.getSignSample() != null) {
+                    signImageView.setImage(new Image(new java.io.ByteArrayInputStream(newValue.getSignSample())));
+                    signIcon.setVisible(false);
+                } else {
+                    signImageView.setImage(null);
+                    signIcon.setVisible(true);
+                }
+            }
+        });
+
+        UpdateCustomerButton.setOnAction(e -> {
+            EntityKhachHang selectedCustomer = tableView.getSelectionModel().getSelectedItem();
+            if (selectedCustomer != null) {
+                String fullname = fullNameField.getText();
+                String cccd = cccdField.getText();
+                Date birthday = birthdayPicker.getValue() != null ? Date.valueOf(birthdayPicker.getValue()) : null;
+                String address = addressField.getText();
+                String phone = phoneField.getText();
+                String email = emailField.getText();
+                String occupation = occupationField.getText();
+                String gender = maleRadio.isSelected() ? "Nam" : "Nữ";
+
+                byte[] profilePicture = profileImageView.getImage() != null ?
+                        getImageBytes(profileImageView.getImage()) : null;
+                byte[] signSample = signImageView.getImage() != null ?
+                        getImageBytes(signImageView.getImage()) : null;
+
+                if (fullname.isEmpty() || cccd.isEmpty() || birthday == null) {
+                    Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setContentText("Vui lòng điền đầy đủ thông tin bắt buộc (Họ tên, CCCD, Ngày sinh)!");
+                    alert.show();
+                    return;
+                }
+                selectedCustomer.setFullname(fullname);
+                selectedCustomer.setCccd(cccd);
+                selectedCustomer.setBirthday(birthday);
+                selectedCustomer.setAddress(address);
+                selectedCustomer.setPhone(phone);
+                selectedCustomer.setEmail(email);
+                selectedCustomer.setOccupation(occupation);
+                selectedCustomer.setGender(gender);
+                selectedCustomer.setProfilePicture(profilePicture);
+                selectedCustomer.setSignSample(signSample);
+
+                boolean isUpdated = bllKhachHang.updateCustomer(selectedCustomer);
+                if (isUpdated) {
+                    tableView.refresh();
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setContentText("Cập nhật khách hàng thành công!");
+                    alert.show();
+                } else {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setContentText("Cập nhật thất bại. Vui lòng kiểm tra lại thông tin.");
+                    alert.show();
+                }
+            } else {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setContentText("Vui lòng chọn khách hàng để cập nhật!");
+                alert.show();
+            }
+        });
+
+        DeleteCustomerButton.setOnAction(e -> {
+            EntityKhachHang selectedCustomer = tableView.getSelectionModel().getSelectedItem();
+            if (selectedCustomer != null) {
+                // Hiển thị hộp thoại xác nhận xóa
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Xóa Khách Hàng");
+                alert.setHeaderText("Bạn có chắc chắn muốn xóa khách hàng này?");
+                alert.setContentText("Họ Tên: " + selectedCustomer.getFullname());
+
+                alert.showAndWait().ifPresent(response -> {
+                    if (response == ButtonType.OK) {
+                        boolean isDeleted = bllKhachHang.deleteCustomer(selectedCustomer.getCustomerId());
+                        if (isDeleted) {
+                            dataList.remove(selectedCustomer);
+                            Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
+                            successAlert.setContentText("Khách hàng đã được xóa thành công!");
+                            successAlert.show();
+                        } else {
+                            Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+                            errorAlert.setContentText("Có lỗi xảy ra khi xóa khách hàng.");
+                            errorAlert.show();
+                        }
+                    }
+                });
+            } else {
+                // Thông báo nếu chưa chọn khách hàng
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setContentText("Vui lòng chọn khách hàng để xóa.");
+                alert.show();
+            }
+        });
+
+        HBox buttonBox = new HBox(10);
+        buttonBox.getChildren().addAll(addCustomerButton, UpdateCustomerButton, DeleteCustomerButton); // Thêm button vào HBox
+        buttonBox.setAlignment(Pos.BASELINE_LEFT);
+
+        container.getChildren().addAll(inputFieldsBox, searchField, buttonBox, tableView);
+
+        inputFieldsBox.getChildren().add(grid);
+
         this.getChildren().add(container);
         AnchorPane.setTopAnchor(container, 70.0);
         AnchorPane.setLeftAnchor(container, 20.0);
@@ -195,26 +364,37 @@ public class KhachHangPane extends AnchorPane {
             Image image = new Image(selectedFile.toURI().toString());
             if (imageType.equals("Profile Picture")) {
                 profileImageView.setImage(image);
-                profileIcon.setVisible(false);
-            } else if (imageType.equals("Signature")) {
+                profileIcon.setVisible(false); // Ẩn icon khi có ảnh
+            } else {
                 signImageView.setImage(image);
-                signIcon.setVisible(false);
+                signIcon.setVisible(false); // Ẩn icon khi có ảnh
             }
         }
+    }
+    private byte[] getImageBytes(Image image) {
+        try {
+            java.io.ByteArrayOutputStream byteArrayOutputStream = new java.io.ByteArrayOutputStream();
+            java.awt.image.BufferedImage bufferedImage = javafx.embed.swing.SwingFXUtils.fromFXImage(image, null);
+            javax.imageio.ImageIO.write(bufferedImage, "png", byteArrayOutputStream);
+            return byteArrayOutputStream.toByteArray();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     private void filterData(String searchText) {
-        ObservableList<EntityKhachHang> filteredList = FXCollections.observableArrayList();
-
-        for (EntityKhachHang kh : dataList) {
-            if (kh.getFullname().toLowerCase().contains(searchText.toLowerCase()) ||
-                    kh.getCccd().toLowerCase().contains(searchText.toLowerCase()) ||
-                    kh.getPhone().toLowerCase().contains(searchText.toLowerCase())) {
-                filteredList.add(kh);
+        ObservableList<EntityKhachHang> filteredData = FXCollections.observableArrayList();
+        for (EntityKhachHang customer : dataList) {
+            if (customer.getFullname().toLowerCase().contains(searchText.toLowerCase()) ||
+                    customer.getCccd().toLowerCase().contains(searchText.toLowerCase())) {
+                filteredData.add(customer);
             }
         }
-
-        tableView.setItems(filteredList);
+        tableView.setItems(filteredData);
     }
 
+    private int generateRandomIdKhachHang() {
+        return (int) (Math.random() * 900000) + 100000;
+    }
 }

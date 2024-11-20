@@ -224,7 +224,7 @@ public class ChuyenKhoanPane extends AnchorPane {
     }
 
     private void printReceipt(String senderAccount, String receiverAccount, double amount, String description, String referenceCode) {
-        String amountInWords = convertAmountToWords(amount);  // You can implement this conversion method.
+        String amountInWords = convertAmountToWords(amount);
         PaymentOrderForm paymentOrderForm = new PaymentOrderForm(
                 senderAccount,
                 dalAccount.getCustomerNameByAccount(senderAccount),

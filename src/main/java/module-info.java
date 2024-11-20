@@ -2,7 +2,7 @@ module com.example.nganhanginformation {
     requires javafx.controls;
     requires javafx.fxml;
     requires java.sql;
-
+    requires javafx.swing;
     requires java.desktop;
 
     opens Entity to javafx.base;

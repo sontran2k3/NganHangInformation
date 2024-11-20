@@ -16,6 +16,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
+import java.math.BigDecimal;
+
 public class RutTienPane extends AnchorPane {
 
     private TableView<EntityAccount> tableView;
@@ -85,20 +87,21 @@ public class RutTienPane extends AnchorPane {
     }
 
     private GridPane createWithdrawalSection() {
-
         GridPane gridPane = new GridPane();
         gridPane.setPadding(new Insets(20));
         gridPane.setVgap(10);
         gridPane.setHgap(10);
-        gridPane.getStyleClass().add("grid-pane"); // Thêm class
+        gridPane.getStyleClass().add("grid-pane");
 
+        // Các thành phần giao diện
         Label accountNumberLabel = new Label("Số tài khoản:");
         TextField accountNumberField = new TextField();
 
         Label accountHolderLabel = new Label("Tên chủ tài khoản:");
         TextField accountHolderField = new TextField();
+        accountHolderField.setEditable(false);
 
-        Label withdrawalAmountLabel = new Label("Số tiền giao dich:");
+        Label withdrawalAmountLabel = new Label("Số tiền giao dịch:");
         TextField withdrawalAmountField = new TextField();
 
         Label pinLabel = new Label("Mã PIN/Mật khẩu:");
@@ -117,7 +120,6 @@ public class RutTienPane extends AnchorPane {
         Label withdrawalDateLabel = new Label("Thời gian giao dịch:");
         DatePicker withdrawalDateField = new DatePicker();
 
-        // Nút Xác nhận rút tiền
         Button withdrawalButton = new Button("Thanh Toán");
         withdrawalButton.getStyleClass().add("transfer-button");
         withdrawalButton.setOnAction(event -> {
@@ -130,8 +132,14 @@ public class RutTienPane extends AnchorPane {
                     contactInfoField.getText()
             );
         });
-
-        // Thêm các trường vào GridPane
+        accountNumberField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.trim().isEmpty()) {
+                String senderName = dalAccount.getCustomerNameByAccount(newValue.trim());
+                accountHolderField.setText(senderName != null ? senderName : "Không tìm thấy");
+            } else {
+                accountHolderField.clear();
+            }
+        });
         gridPane.add(accountNumberLabel, 0, 0);
         gridPane.add(accountNumberField, 1, 0);
         gridPane.add(accountHolderLabel, 0, 1);
@@ -150,21 +158,33 @@ public class RutTienPane extends AnchorPane {
         gridPane.add(withdrawalDateField, 1, 7);
         gridPane.add(withdrawalButton, 1, 8);
 
-
-        Image printIcon = new Image(getClass().getResourceAsStream("/com/example/nganhanginformation/Image/printer.png")); // Đường dẫn đến icon
-        ImageView printIconView = new ImageView(printIcon);
-        printIconView.setFitWidth(20);
-        printIconView.setFitHeight(20);
-
-
-        Button printReceiptButton = new Button("In hóa đơn", printIconView);
-        gridPane.add(printReceiptButton, 1, 9);
-
-
-        GridPane.setHalignment(withdrawalButton, HPos.RIGHT);
-        GridPane.setHalignment(printReceiptButton, HPos.RIGHT);
-
         return gridPane;
+    }
+
+    private void handleWithdrawal(String accountNumber, String amountStr, String pin, String method, String reason, String contactInfo) {
+        try {
+            BigDecimal amount = new BigDecimal(amountStr);
+            if (amount.compareTo(BigDecimal.ZERO) <= 0) {
+                throw new IllegalArgumentException("Số tiền phải lớn hơn 0!");
+            }
+
+            boolean success = dalAccount.processWithdrawal(accountNumber, amount, pin, method, reason, contactInfo);
+
+            if (success) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION, "Giao dịch thành công!", ButtonType.OK);
+                alert.showAndWait();
+                refreshTableData(); // Cập nhật lại dữ liệu trên bảng
+            } else {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Giao dịch thất bại!", ButtonType.OK);
+                alert.showAndWait();
+            }
+        } catch (NumberFormatException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Số tiền không hợp lệ!", ButtonType.OK);
+            alert.showAndWait();
+        } catch (RuntimeException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage(), ButtonType.OK);
+            alert.showAndWait();
+        }
     }
 
     private void filterData(String searchTerm) {
@@ -181,8 +201,11 @@ public class RutTienPane extends AnchorPane {
         }
         tableView.setItems(filteredData);
     }
-
-    private void handleWithdrawal(String accountNumber, String amount, String pin, String method, String reason, String contactInfo) {
-        System.out.println("Rút tiền từ tài khoản " + accountNumber + " với số tiền " + amount + ". Mã PIN: " + pin + ", Hình thức: " + method + ", Lý do: " + reason + ", Thông tin liên lạc: " + contactInfo);
+    private void refreshTableData() {
+        dataList.clear();
+        dataList.addAll(dalAccount.getAllCustomers());
+        tableView.refresh();
     }
+
+
 }

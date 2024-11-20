@@ -21,6 +21,16 @@ public class EntityAccount {
     private String address;
     private String status;
 
+    public String getContact() {
+        return contact;
+    }
+
+    public void setContact(String contact) {
+        this.contact = contact;
+    }
+
+    private String contact;
+
     public int getEmployee_id() {
         return employee_id;
     }
@@ -82,14 +92,6 @@ public class EntityAccount {
     public void setStatus(String status) {
         this.status = status;
     }
-
-//    public int getEmployeeid() {
-//        return employeeid;
-//    }
-//
-//    public void setEmployeeid(int employeeid) {
-//        this.employeeid = employeeid;
-//    }
 
     public Date getCreatedate() {
         return createdate;
