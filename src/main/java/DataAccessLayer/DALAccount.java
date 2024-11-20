@@ -60,6 +60,31 @@ public class DALAccount {
         return null;
     }
 
+//    public String getCustomerNameByAccount(String accountId) {
+//        String query = """
+//        SELECT c.fullname
+//        FROM customer c
+//        INNER JOIN account a ON c.customer_id = a.customer_id
+//        WHERE a.account_id = ?
+//    """;
+//
+//        try (Connection conn = DBContext.getConnection();
+//             PreparedStatement stmt = conn.prepareStatement(query)) {
+//
+//            stmt.setString(1, accountId); // Gán giá trị account_id
+//            ResultSet rs = stmt.executeQuery();
+//            if (rs.next()) {
+//                return rs.getString("fullname"); // Lấy tên khách hàng
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        } catch (Exception e) {
+//            throw new RuntimeException(e);
+//        }
+//        return null;
+//    }
+
+
     public boolean validatePin(String accountNumber, int pin) {
         String query = "SELECT pin FROM account WHERE account_id = ?";
         try (Connection conn = DBContext.getConnection();

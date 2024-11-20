@@ -17,11 +17,9 @@ public class EntityKhachHang {
     private BigDecimal balance;
     private String gender;
 
-
     public void setGender(String gender) {
         this.gender = gender;
     }
-
 
     private byte[] signSample;
     private byte[] profilePicture;
@@ -74,4 +72,4 @@ public class EntityKhachHang {
     public void setGender(int genderCode) {
         this.gender = (genderCode == 1) ? "Nam" : "Nữ";
     }
-}
+} 
