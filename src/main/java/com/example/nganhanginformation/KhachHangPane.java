@@ -141,11 +141,11 @@ public class KhachHangPane extends AnchorPane {
 
         TableColumn<EntityKhachHang, String> phoneCol = new TableColumn<>("Số Điện Thoại");
         phoneCol.setCellValueFactory(new PropertyValueFactory<>("phone"));
-        phoneCol.setMinWidth(100);
+        phoneCol.setMinWidth(150);
 
         TableColumn<EntityKhachHang, String> birthdayCol = new TableColumn<>("Ngày Sinh");
         birthdayCol.setCellValueFactory(new PropertyValueFactory<>("birthday"));
-        birthdayCol.setMinWidth(100);
+        birthdayCol.setMinWidth(150);
 
         TableColumn<EntityKhachHang, String> addressCol = new TableColumn<>("Địa Chỉ");
         addressCol.setCellValueFactory(new PropertyValueFactory<>("address"));
@@ -157,7 +157,7 @@ public class KhachHangPane extends AnchorPane {
 
         TableColumn<EntityKhachHang, String> occupationCol = new TableColumn<>("Nghề Nghiệp");
         occupationCol.setCellValueFactory(new PropertyValueFactory<>("occupation"));
-        occupationCol.setMinWidth(100);
+        occupationCol.setMinWidth(150);
 
         tableView.getColumns().addAll(idCol, fullnameCol, cccdCol, phoneCol, birthdayCol, addressCol, emailCol, occupationCol);
 
@@ -364,10 +364,10 @@ public class KhachHangPane extends AnchorPane {
             Image image = new Image(selectedFile.toURI().toString());
             if (imageType.equals("Profile Picture")) {
                 profileImageView.setImage(image);
-                profileIcon.setVisible(false); // Ẩn icon khi có ảnh
+                profileIcon.setVisible(false);
             } else {
                 signImageView.setImage(image);
-                signIcon.setVisible(false); // Ẩn icon khi có ảnh
+                signIcon.setVisible(false);
             }
         }
     }

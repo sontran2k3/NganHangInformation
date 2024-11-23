@@ -11,6 +11,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.*;
+import javafx.stage.Stage;
 
 import java.math.BigDecimal;
 import java.sql.Date;
@@ -45,35 +46,62 @@ public class AccountPane extends AnchorPane {
         tableView.getStyleClass().add("table-view");
 
         TableColumn<EntityAccount, Integer> idCol = new TableColumn<>("Mã tài khoản");
-        idCol.setCellValueFactory(new PropertyValueFactory<>("accountId")); // Đảm bảo sử dụng tên đúng là "accountId"
-        idCol.setMinWidth(165);
+        idCol.setCellValueFactory(new PropertyValueFactory<>("accountId"));
+        idCol.setMinWidth(125);
 
 
         TableColumn<EntityAccount, String> fullnameCol = new TableColumn<>("Tên khách hàng");
         fullnameCol.setCellValueFactory(new PropertyValueFactory<>("fullname"));
-        fullnameCol.setMinWidth(165);
+        fullnameCol.setMinWidth(150);
 
         TableColumn<EntityAccount, String> cccdCol = new TableColumn<>("Loại tài khoản");
         cccdCol.setCellValueFactory(new PropertyValueFactory<>("accountType"));
-        cccdCol.setMinWidth(165);
+        cccdCol.setMinWidth(150);
 
         TableColumn<EntityAccount, Double> balanceCol = new TableColumn<>("Số dư hiện tại");
         balanceCol.setCellValueFactory(new PropertyValueFactory<>("balance"));
-        balanceCol.setMinWidth(165);
+        balanceCol.setMinWidth(150);
 
         TableColumn<EntityAccount, Date> createdateCol = new TableColumn<>("Ngày kích hoạt");
         createdateCol.setCellValueFactory(new PropertyValueFactory<>("createdate"));  // Đảm bảo tên thuộc tính đúng
-        createdateCol.setMinWidth(165);
+        createdateCol.setMinWidth(150);
 
         TableColumn<EntityAccount, String> statusCol = new TableColumn<>("Trạng thái tài khoản");
         statusCol.setCellValueFactory(new PropertyValueFactory<>("status"));
-        statusCol.setMinWidth(165);
+        statusCol.setMinWidth(150);
 
         TableColumn<EntityAccount, String> pinCol = new TableColumn<>("Mã Pin");
         pinCol.setCellValueFactory(new PropertyValueFactory<>("pin"));
-        pinCol.setMinWidth(165);
+        pinCol.setMinWidth(150);
 
-        tableView.getColumns().addAll(idCol, fullnameCol, cccdCol, balanceCol, createdateCol, statusCol, pinCol);
+        TableColumn<EntityAccount, String> SaokeCol = new TableColumn<>("Sao Kê");
+        SaokeCol.setMinWidth(150);
+
+        SaokeCol.setCellFactory(column -> {
+            return new TableCell<EntityAccount, String>() {
+                @Override
+                protected void updateItem(String item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty) {
+                        setGraphic(null);
+                    } else {
+                        Button saokeButton = new Button("Sao kê");
+                        saokeButton.setOnAction(event -> {
+                            // Lấy tài khoản đã chọn
+                            EntityAccount selectedAccount = getTableView().getItems().get(getIndex());
+
+                            // Mở cửa sổ sao kê tài khoản
+                            SaokePane.openSaokeWindow(selectedAccount);
+                        });
+                        setGraphic(saokeButton);
+                    }
+                }
+            };
+        });
+
+
+
+        tableView.getColumns().addAll(idCol, fullnameCol, cccdCol, balanceCol, createdateCol, statusCol, pinCol, SaokeCol);
 
         dataList = FXCollections.observableArrayList(dalAccount.getAllCustomers());
         tableView.setItems(dataList);

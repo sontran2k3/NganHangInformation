@@ -1,0 +1,60 @@
+
+/* Định dạng TableView */
+.table-view {
+    -fx-background-color: #f4f4f4;
+    -fx-border-color: #ddd;
+    -fx-border-width: 1;
+    -fx-font-size: 14px;
+    -fx-selection-bar: #4CAF50;
+}
+
+/* Định dạng các cột trong bảng */
+.table-view .column-header {
+    -fx-background-color: #4CAF50;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+/* Định dạng hàng trong bảng */
+.table-view .table-row-cell {
+    -fx-background-color: #ffffff;
+}
+
+.table-view .table-row-cell:selected {
+    -fx-background-color: #e8f5e9;
+}
+
+/* Định dạng các nút "Sao kê" */
+.button-sao-ke {
+    -fx-background-color: #4CAF50;
+    -fx-text-fill: white;
+    -fx-border-radius: 4px;
+    -fx-padding: 5 10;
+}
+
+/* Định dạng label và các thành phần khác */
+.label {
+    -fx-font-size: 14px;
+}
+/* Định dạng label chung cho tất cả các Label */
+.label {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;  /* Thêm dòng này để thiết lập chữ in đậm */
+}
+
+/* Định dạng riêng cho các cột trong TableView */
+.table-view .column-header {
+    -fx-background-color: #4CAF50;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+/* Định dạng hàng trong bảng */
+.table-view .table-row-cell {
+    -fx-background-color: #ffffff;
+}
+
+.table-view .table-row-cell:selected {
+    -fx-background-color: #e8f5e9;
+}
+

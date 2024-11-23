@@ -33,6 +33,13 @@
         </dependency>
 
 
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-swing</artifactId>
+            <version>20</version> <!-- Sử dụng phiên bản phù hợp với JDK -->
+        </dependency>
+
+
 
 
         <dependency>
