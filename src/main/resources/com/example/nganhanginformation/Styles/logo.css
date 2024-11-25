@@ -1,0 +1,18 @@
+/* CSS cho logo */
+.bank-text {
+    font-family: Arial, sans-serif;
+    font-size: 28px;
+    color: white;
+}
+
+.info-text {
+    font-family: Arial, sans-serif;
+    font-size: 28px;
+    color: white;
+}
+
+/* Hiệu ứng di chuyển mũi tên */
+.arrow {
+    -fx-stroke: blue;
+    -fx-stroke-width: 3;
+}

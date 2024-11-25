@@ -77,7 +77,6 @@ public class SaokePane extends HBox {
                     setGraphic(null);
                 } else {
                     EntityTransaction transaction = getTableRow().getItem();
-
                     String transactionType = transaction.getTransactionType();
                     ImageView imageView = new ImageView();
 

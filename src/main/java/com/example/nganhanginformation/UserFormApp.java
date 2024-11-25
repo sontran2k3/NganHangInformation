@@ -77,7 +77,6 @@ public class UserFormApp extends Application {
         grid.add(new Label("Gender:"), 2, 3);
         grid.add(genderBox, 3, 3); // Thêm HBox vào cột 3 và hàng 3
 
-        // Tạo các ImageView để hiển thị ảnh chân dung và chữ ký
         ImageView profileImageView = new ImageView();
         profileImageView.setPreserveRatio(true);  // Giữ tỉ lệ hình ảnh
         profileImageView.setFitHeight(100);  // Đặt chiều cao ô vuông

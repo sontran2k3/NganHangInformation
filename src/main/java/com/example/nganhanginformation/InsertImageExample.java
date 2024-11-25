@@ -20,7 +20,6 @@ import java.nio.file.Files;
 
 public class InsertImageExample extends Application {
 
-    // SQL để chèn dữ liệu vào bảng
     private static final String INSERT_IMAGE_SQL = "INSERT INTO images (name, image) VALUES (?, ?)";
 
     public static void main(String[] args) {

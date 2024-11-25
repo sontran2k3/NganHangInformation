@@ -19,6 +19,7 @@ public class NhanSu extends Application {
     private Stage primaryStage;
 
     // Khai báo các pane cho các chức năng
+    private BankOfInformationUI logo;
     private KhachHangPane homePane;
     private AccountPane infoPane;
     private ChuyenKhoanPane chuyenkhoanPane;
@@ -53,7 +54,7 @@ public class NhanSu extends Application {
 
         Line lineBelowLogo = new Line(0, 0, 200, 0);
         lineBelowLogo.setStrokeWidth(1);
-        lineBelowLogo.setStyle("-fx-stroke: gray;");
+        lineBelowLogo.setStyle("-fx-stroke: #ffffff;");
 
         Button btnHome = createStyledButton("Quản lý khách hàng", "/com/example/nganhanginformation/Image/home.png");
         Button btnInfo = createStyledButton("Quản lý tài khoản", "/com/example/nganhanginformation/Image/user.png");
@@ -65,7 +66,7 @@ public class NhanSu extends Application {
 
         Line separator = new Line(0, 0, 200, 0);
         separator.setStrokeWidth(1);
-        separator.setStyle("-fx-stroke: gray;");
+        separator.setStyle("-fx-stroke: #ffffff;");
 
         StackPane outerFrame = new StackPane();
         outerFrame.getStyleClass().add("outer-frame");
@@ -81,6 +82,7 @@ public class NhanSu extends Application {
         AnchorPane.setTopAnchor(mainContent, 20.0);
         AnchorPane.setLeftAnchor(mainContent, 250.0);
 
+        logo = new BankOfInformationUI(scene);
         homePane = new KhachHangPane(scene);
         infoPane = new AccountPane(scene);
         chuyenkhoanPane = new ChuyenKhoanPane(scene);
@@ -89,9 +91,21 @@ public class NhanSu extends Application {
         managePane = new ManagePane(scene);
         settingsPane = new ThongKePane();
 
-        mainContent.getChildren().addAll(homePane, infoPane, chuyenkhoanPane, naptienPane, ruttienPane, managePane, settingsPane);
+        mainContent.getChildren().addAll(logo, homePane, infoPane, chuyenkhoanPane, naptienPane, ruttienPane, managePane, settingsPane);
 
         // Thiết lập sự kiện cho các nút
+
+        logoView.setOnMouseClicked(e -> {
+            // Mở trang BankOfInformationUI
+            BankOfInformationUI bankUI = new BankOfInformationUI(scene);
+            try {
+                switchPane(logo);  // Khởi tạo và mở BankOfInformationUI
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
+
+
         btnHome.setOnAction(e -> switchPane(homePane));
         btnInfo.setOnAction(e -> switchPane(infoPane));
         btnManage.setOnAction(e -> switchPane(managePane));
@@ -102,7 +116,7 @@ public class NhanSu extends Application {
         AnchorPane.setLeftAnchor(outerFrame, 0.0);
         AnchorPane.setBottomAnchor(outerFrame, 0.0);
 
-        switchPane(homePane);
+        switchPane(logo);
 
         scene.getStylesheets().add(getClass().getResource("Styles/nhansu.css").toExternalForm());
     }

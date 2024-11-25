@@ -89,7 +89,6 @@ public class AccountPane extends AnchorPane {
                         saokeButton.setOnAction(event -> {
                             // Lấy tài khoản đã chọn
                             EntityAccount selectedAccount = getTableView().getItems().get(getIndex());
-
                             // Mở cửa sổ sao kê tài khoản
                             SaokePane.openSaokeWindow(selectedAccount);
                         });
